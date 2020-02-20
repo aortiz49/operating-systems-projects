@@ -27,16 +27,61 @@ import java.util.ArrayList;
 /**
  * Represents a Buffer that holds messages from the Client to be processed by the Server.
  *
- * @author a.ortizg@uniandes.edu.co
  */
 public class Buffer extends Thread {
     // ===============================================
     // Attributes
     // ===============================================
+    /**
+     * The max size of the buffer.
+     */
+    private int maxBufferSize;
+
+    /**
+     * The current size of the buffer.
+     */
+    private int bufferSize;
 
     /**
      * List of messages to be processed by the server.
      */
     private ArrayList<Message> messages;
+
+    // ===============================================
+    // Constructor
+    // ===============================================
+
+    /**
+     * Constructs a new buffer with a given size.
+     *
+     * @param pMaxBufferSize the buffer size
+     */
+    public Buffer(int pMaxBufferSize){
+        maxBufferSize = pMaxBufferSize;
+    }
+
+    // ===============================================
+    // Getters & Setters
+    // ===============================================
+
+
+    // ===============================================
+    // Methods
+    // ===============================================
+
+    /**
+     * Adds a message to the buffer.
+     *
+     * @param pMessage the message
+     */
+    public void addMessageToBuffer(Message pMessage){
+
+        if(bufferSize == maxBufferSize){
+
+        }
+        messages.add(pMessage);
+    }
+
+
 
 }

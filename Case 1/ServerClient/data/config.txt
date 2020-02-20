@@ -1,0 +1,5 @@
+Config:
+clients =15
+servers =21
+message_requests =7
+buffer_size =70

@@ -25,7 +25,6 @@ SOFTWARE.
 /**
  * Represents a message sent by the client.
  *
- * @author a.ortizg@uniandes.edu.co
  */
 public class Message {
     // ===============================================
@@ -33,9 +32,33 @@ public class Message {
     // ===============================================
 
     /**
+     * Indicates if the message is incoming or outgoing(from the point of view of the server.
+     */
+    private boolean isIncoming;
+
+    /**
      * The body of the message.
      */
-    private int messageText;
+    private int message;
+    // ===============================================
+    // Getters & Setters
+    // ===============================================
+
+    public boolean isIncoming() {
+        return isIncoming;
+    }
+
+    public void setIncoming(boolean incoming) {
+        isIncoming = incoming;
+    }
+
+    public int getMessage() {
+        return message;
+    }
+
+    public void setMessage(int message) {
+        this.message = message;
+    }
 
     // ===============================================
     // Constructor
@@ -44,32 +67,13 @@ public class Message {
     /**
      * Constructs a new message with a given message text.
      *
-     * @param pMessageText the body of the new message
+     * @param pMessage the body of the new message
+     * @param pIsIncoming indicates if the message is incoming
      */
-    public Message(int pMessageText) {
-        messageText = pMessageText;
+    public Message(int pMessage, boolean pIsIncoming) {
+        message = pMessage;
+        isIncoming = true;
     }
 
-    // ===============================================
-    // Getters & Setters
-    // ===============================================
-
-    /**
-     * Returns the body of the message.
-     *
-     * @return the text body
-     */
-    public int getMessageText() {
-        return messageText;
-    }
-
-    /**
-     * Sets the body of the message.
-     *
-     * @param pMessageText the new text body
-     */
-    public void setMessageText(int pMessageText) {
-        messageText = pMessageText;
-    }
 
 }

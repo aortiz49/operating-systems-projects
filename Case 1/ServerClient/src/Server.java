@@ -24,13 +24,59 @@ SOFTWARE.
 
 /**
  * Represents a Server that responds to a Client request.
- *
- * @author a.ortizg@uniandes.edu.co
  */
 public class Server extends Thread {
     // ===============================================
     // Attributes
     // ===============================================
+
+    /**
+     * The server's name
+     */
+    private String serverName;
+
+    /**
+     * The buffer that will be accessed.
+     */
+    private static Buffer buffer;
+
+    // ===============================================
+    // Constructor
+    // ===============================================
+
+    /**
+     * Constructs a new server with a  given name and buffer.
+     *
+     * @param pServerName the server's name
+     * @param pBuffer     the new buffer
+     */
+    public Server(String pServerName, Buffer pBuffer) {
+        serverName = pServerName;
+        buffer = pBuffer;
+    }
+
+    // ===============================================
+    // Methods
+    // ===============================================
+
+    /**
+     * Receives the message from the client, and prepares the response.
+     *
+     * @param pMessage the client's message
+     * @param pName    the client's name
+     * @return the processed response
+     */
+    public Message attendToRequest(String pName, Message pMessage) {
+
+        if (pMessage.isIncoming()) {
+            int message = pMessage.getMessage();
+            pMessage.setMessage(++message);
+            pMessage.setIncoming(false);
+            System.out.println("Attended message from: " + pName);
+        }
+
+        return pMessage;
+    }
 
 
 }
