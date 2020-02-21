@@ -21,11 +21,14 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
+package src;
 
 import java.util.ArrayList;
 
 /**
  * Represents a Buffer that holds messages from the Client to be processed by the Server.
+ * @author a.ortizg@uniandes.edu.co
+ * @author lm.sierra20@uniandes.edu.co
  */
 public class Buffer extends Thread {
     // ===============================================
@@ -66,9 +69,15 @@ public class Buffer extends Thread {
     /**
      * Returns the buffer size.
      *
+     * <p>
+     * Synchronized so that a thread wont´t obtain the wrong value
+     * in case another thread is depositing into the buffer while another is
+     * obtaining the current buffer size at the same time.
+     * </p>
+     *
      * @return the current size of the buffer
      */
-    public int getBufferSize() {
+    public synchronized int getBufferSize() {
         return bufferSize;
     }
 
@@ -88,13 +97,17 @@ public class Buffer extends Thread {
     /**
      * Adds a message to the buffer.
      * <p>
-     *     Only one thread can access this at any given moment. A client
-     *     can deposit a message or a server can attend to a message.
+     * Only one thread can access this at any given moment. A client
+     * can deposit a message or a server can attend to a message.
      * </p>
      *
      * @param pMessage the message
      */
     public synchronized void addMessageToBuffer(Message pMessage) {
+
+        // Sends a message to the console with the message received by the buffer from the client
+        System.out.println("Received the message <" + pMessage.getMessage() + "> from the client " +
+                pMessage.getClient().getName());
         messages.add(pMessage);
     }
 

@@ -1,4 +1,4 @@
-/*
+package src;/*
 MIT License
 
 Copyright (c) 2017 Universidad de los Andes - ISIS2203
@@ -24,6 +24,9 @@ SOFTWARE.
 
 /**
  * Represents a Server that responds to a Client request.
+ *
+ * @author a.ortizg@uniandes.edu.co
+ * @author lm.sierra20@uniandes.edu.co
  */
 public class Server extends Thread {
     // ===============================================
@@ -70,7 +73,7 @@ public class Server extends Thread {
 
         int message = pMessage.getMessage();
         pMessage.setMessage(++message);
-       //HEY pMessage.getClient().addMessage(pMessage);
+
         System.out.println("Attended message from: " + pName);
 
         return pMessage;

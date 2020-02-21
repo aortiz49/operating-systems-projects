@@ -1,4 +1,4 @@
-/*
+package src;/*
 MIT License
 
 Copyright (c) 2017 Universidad de los Andes - ISIS2203
@@ -31,8 +31,13 @@ import java.util.ArrayList;
  * Represents the main operation of the application.
  *
  * @author a.ortizg@uniandes.edu.co
+ * @author lm.sierra20@uniandes.edu.co
  */
 public class Main extends Thread {
+
+    /**
+     * The number of servers to initialize the app
+     */
     private static int servers;
     private static int clients;
     private static int message_requests;
