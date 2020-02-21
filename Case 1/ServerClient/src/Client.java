@@ -23,6 +23,7 @@ SOFTWARE.
  */
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Represents a Client that creates a message request to a Server.
@@ -50,9 +51,14 @@ public class Client extends Thread {
     private static Buffer buffer;
 
     /**
-     * Counter to keep track of received messages from the server.
+     * The counter to keep track of the messages waiting to be delivered.
      */
     private int messageCounter;
+
+    /**
+     * The list containing the received message responses from the server.
+     */
+    private List<Message> receivedMessages;
 
     // ===============================================
     // Constructor
@@ -69,6 +75,7 @@ public class Client extends Thread {
         clientName = pClientName;
         messageRequests = pMessageRequests;
         buffer = pBuffer;
+        receivedMessages = new ArrayList<>();
     }
 
     // ===============================================
@@ -79,7 +86,16 @@ public class Client extends Thread {
      * Creates a message to be sent to the buffer.
      */
     private Message createMessageRequest() {
-        return new Message((int) (Math.random() * 100), true);
+        return new Message((int) (Math.random() * 100), this);
+    }
+
+    /**
+     * Adds a message from the server to the client's received message list.
+     *
+     * @param pMessage the message response from the server
+     */
+    public void addMessage(Message pMessage) {
+        receivedMessages.add(pMessage);
     }
 
 
@@ -92,9 +108,30 @@ public class Client extends Thread {
             // creates a message
             Message message = createMessageRequest();
 
-            while(buffer.)
+            // if the buffer is full, wait until it is not full (active wait)
+            while (buffer.getBufferSize() == buffer.getMaxBufferSize()) {
+                yield();
+            }
+
+            // adds the message to the buffer message list
+            buffer.addMessageToBuffer(message);
+
+            // decrease the amount of messages pending to be sent to the server
+            --messageCounter;
+
+            // Once the message is added to the buffer, wait until a response is received
+            try {
+                // message bag
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            String receivedMessage =
+                    "The message" + receivedMessages.remove(receivedMessages.size() - 1) + " was "
+                            + "received.";
+
+            System.out.println();
         }
     }
-
-
 }

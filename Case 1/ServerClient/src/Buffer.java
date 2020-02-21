@@ -26,7 +26,6 @@ import java.util.ArrayList;
 
 /**
  * Represents a Buffer that holds messages from the Client to be processed by the Server.
- *
  */
 public class Buffer extends Thread {
     // ===============================================
@@ -35,7 +34,7 @@ public class Buffer extends Thread {
     /**
      * The max size of the buffer.
      */
-    private int maxBufferSize;
+    private final int maxBufferSize;
 
     /**
      * The current size of the buffer.
@@ -56,7 +55,7 @@ public class Buffer extends Thread {
      *
      * @param pMaxBufferSize the buffer size
      */
-    public Buffer(int pMaxBufferSize){
+    public Buffer(int pMaxBufferSize) {
         maxBufferSize = pMaxBufferSize;
     }
 
@@ -64,6 +63,23 @@ public class Buffer extends Thread {
     // Getters & Setters
     // ===============================================
 
+    /**
+     * Returns the buffer size.
+     *
+     * @return the current size of the buffer
+     */
+    public int getBufferSize() {
+        return bufferSize;
+    }
+
+    /**
+     * Returns the max buffer size.
+     *
+     * @return the max buffer size
+     */
+    public int getMaxBufferSize() {
+        return maxBufferSize;
+    }
 
     // ===============================================
     // Methods
@@ -71,17 +87,16 @@ public class Buffer extends Thread {
 
     /**
      * Adds a message to the buffer.
+     * <p>
+     *     Only one thread can access this at any given moment. A client
+     *     can deposit a message or a server can attend to a message.
+     * </p>
      *
      * @param pMessage the message
      */
-    public void addMessageToBuffer(Message pMessage){
-
-        if(bufferSize == maxBufferSize){
-
-        }
+    public synchronized void addMessageToBuffer(Message pMessage) {
         messages.add(pMessage);
     }
-
 
 
 }

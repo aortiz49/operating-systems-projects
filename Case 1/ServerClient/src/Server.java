@@ -68,12 +68,10 @@ public class Server extends Thread {
      */
     public Message attendToRequest(String pName, Message pMessage) {
 
-        if (pMessage.isIncoming()) {
-            int message = pMessage.getMessage();
-            pMessage.setMessage(++message);
-            pMessage.setIncoming(false);
-            System.out.println("Attended message from: " + pName);
-        }
+        int message = pMessage.getMessage();
+        pMessage.setMessage(++message);
+       //HEY pMessage.getClient().addMessage(pMessage);
+        System.out.println("Attended message from: " + pName);
 
         return pMessage;
     }

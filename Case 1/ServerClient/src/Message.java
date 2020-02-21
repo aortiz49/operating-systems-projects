@@ -32,25 +32,18 @@ public class Message {
     // ===============================================
 
     /**
-     * Indicates if the message is incoming or outgoing(from the point of view of the server.
-     */
-    private boolean isIncoming;
-
-    /**
      * The body of the message.
      */
     private int message;
+
+    /**
+     * The client who sent the message.
+     */
+    private Client client;
     // ===============================================
     // Getters & Setters
     // ===============================================
 
-    public boolean isIncoming() {
-        return isIncoming;
-    }
-
-    public void setIncoming(boolean incoming) {
-        isIncoming = incoming;
-    }
 
     public int getMessage() {
         return message;
@@ -68,12 +61,22 @@ public class Message {
      * Constructs a new message with a given message text.
      *
      * @param pMessage the body of the new message
-     * @param pIsIncoming indicates if the message is incoming
      */
-    public Message(int pMessage, boolean pIsIncoming) {
+    public Message(int pMessage, Client pClient) {
         message = pMessage;
-        isIncoming = true;
+        client = pClient;
     }
 
+    // ===============================================
+    // Methods
+    // ===============================================
 
+    /**
+     * Returns the client associated with the message.
+     *
+     * @return the client who authored the message
+     */
+    public Client getClient(){
+        return client;
+    }
 }
