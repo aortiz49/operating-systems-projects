@@ -102,7 +102,7 @@ public class Client extends Thread {
             try {
                 // message bag
                 System.out.println(clientName + " is waiting for a response from the " + "server");
-                wait();
+                this.wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
