@@ -50,16 +50,6 @@ public class Client extends Thread {
      */
     private static Buffer buffer;
 
-    /**
-     * The counter to keep track of the messages waiting to be delivered.
-     */
-    private int messageCounter;
-
-    /**
-     * The list containing the received message responses from the server.
-     */
-    private List<Message> receivedMessages;
-
     // ===============================================
     // Constructor
     // ===============================================
@@ -75,7 +65,6 @@ public class Client extends Thread {
         clientName = pClientName;
         messageRequests = pMessageRequests;
         buffer = pBuffer;
-        receivedMessages = new ArrayList<>();
     }
 
     // ===============================================
@@ -90,21 +79,11 @@ public class Client extends Thread {
     }
 
     /**
-     * Adds a message from the server to the client's received message list.
-     *
-     * @param pMessage the message response from the server
-     */
-    public void addMessage(Message pMessage) {
-        receivedMessages.add(pMessage);
-    }
-
-
-    /**
      * Starts the thread execution process.
      */
     public void run() {
 
-        while (messageCounter > 0) {
+        while (messageRequests > 0) {
             // creates a message
             Message message = createMessageRequest();
 
@@ -117,21 +96,16 @@ public class Client extends Thread {
             buffer.addMessageToBuffer(message);
 
             // decrease the amount of messages pending to be sent to the server
-            --messageCounter;
+            --messageRequests;
 
             // Once the message is added to the buffer, wait until a response is received
             try {
                 // message bag
+                System.out.println(clientName + " is waiting for a response from the " + "server");
                 wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
-            String receivedMessage =
-                    "The message" + receivedMessages.remove(receivedMessages.size() - 1) + " was "
-                            + "received.";
-
-            System.out.println();
         }
     }
 }

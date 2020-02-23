@@ -57,6 +57,7 @@ public class Buffer extends Thread {
      */
     public Buffer(int pMaxBufferSize) {
         maxBufferSize = pMaxBufferSize;
+        messages = new ArrayList<>();
     }
 
     // ===============================================
@@ -65,10 +66,13 @@ public class Buffer extends Thread {
 
     /**
      * Returns the buffer size.
+     * <p>
+     * Synchronized so that only one thread can check the size of the buffer at a time.
+     * </p>
      *
      * @return the current size of the buffer
      */
-    public int getBufferSize() {
+    public synchronized int getBufferSize() {
         return bufferSize;
     }
 
@@ -81,6 +85,24 @@ public class Buffer extends Thread {
         return maxBufferSize;
     }
 
+    /**
+     * Returns the array containing the client message requests.
+     *
+     * @return array containing client message requests
+     */
+    public ArrayList<Message> getMessages() {
+        return messages;
+    }
+
+    /**
+     * Sets the array containing the client message requests.
+     *
+     * @param pMessages the new list of client message requests
+     */
+    public void setMessages(ArrayList<Message> pMessages) {
+        messages = pMessages;
+    }
+
     // ===============================================
     // Methods
     // ===============================================
@@ -88,14 +110,16 @@ public class Buffer extends Thread {
     /**
      * Adds a message to the buffer.
      * <p>
-     *     Only one thread can access this at any given moment. A client
-     *     can deposit a message or a server can attend to a message.
+     * Only one thread can access this at any given moment. A client
+     * can deposit a message or a server can attend to a message.
      * </p>
      *
      * @param pMessage the message
      */
     public synchronized void addMessageToBuffer(Message pMessage) {
         messages.add(pMessage);
+        System.out.println("------ Client " + pMessage.getClient().getName() + " added message " + pMessage
+                .getMessage() + " to the buffer.");
     }
 
 

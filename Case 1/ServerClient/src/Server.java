@@ -62,19 +62,47 @@ public class Server extends Thread {
     /**
      * Receives the message from the client, and prepares the response.
      *
-     * @param pMessage the client's message
-     * @param pName    the client's name
+     * <p>
+     * Synchronized so that only one thread is retrieving a message from the buffer at any
+     * given moment.This prevents a a simultaneous retrieve.
+     * </p>
+     *
      * @return the processed response
      */
-    public Message attendToRequest(String pName, Message pMessage) {
+    public synchronized Message attendToRequest() {
 
-        int message = pMessage.getMessage();
-        pMessage.setMessage(++message);
-       //HEY pMessage.getClient().addMessage(pMessage);
-        System.out.println("Attended message from: " + pName);
+        Message message = buffer.getMessages().remove(buffer.getBufferSize() - 1);
+        int messageValue = message.getMessage();
+        message.setMessage(++messageValue);
+        System.out.println(
+                serverName + " attended the message request from Client " + message.getClient()
+                                                                                   .getName());
 
-        return pMessage;
+        return message;
     }
 
+    /**
+     * Starts the thread execution process.
+     */
+    public void run() {
+
+        // while the buffer contains messages, try to retrieve them
+        while (buffer.getBufferSize() > 0) {
+
+            // if the buffer is full for some reason (some other threads could have modified the
+            // buffer) yield the processor to another thread
+            while (buffer.getBufferSize() == 0) {
+                yield();
+            }
+
+            // processes the message from the buffer
+            Message clientMessage = attendToRequest();
+
+            // Once the message is processed, notify the client who sent the message.
+            clientMessage.getClient().notify();
+        }
+
+
+    }
 
 }
