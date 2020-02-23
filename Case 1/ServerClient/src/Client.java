@@ -1,4 +1,4 @@
-/*
+package src;/*
 MIT License
 
 Copyright (c) 2017 Universidad de los Andes - ISIS2203
@@ -29,6 +29,7 @@ import java.util.List;
  * Represents a Client that creates a message request to a Server.
  *
  * @author a.ortizg@uniandes.edu.co
+ * @author lm.sierra20@uniandes.edu.co
  */
 public class Client extends Thread {
     // ===============================================
@@ -88,7 +89,11 @@ public class Client extends Thread {
             Message message = createMessageRequest();
 
             // if the buffer is full, wait until it is not full (active wait)
+            // internally, the method to obtain the current buffer size is synchronized so that
+            // this value won't be affected by a simultaneous message request being performed
+            // while the current thread tries to access the buffer size.
             while (buffer.getBufferSize() == buffer.getMaxBufferSize()) {
+                // relinquish the processor
                 yield();
             }
 
