@@ -1,5 +1,5 @@
 Config:
-clients =15
-servers =21
-message_requests =7
+clients =2
+servers =17
+message_requests =8
 buffer_size =70

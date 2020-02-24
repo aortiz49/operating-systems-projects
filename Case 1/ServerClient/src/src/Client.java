@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents a Client that creates a message request to a Server.
+ * Represents a Client that creates a message request to a src.Server.
  *
  * @author a.ortizg@uniandes.edu.co
  * @author lm.sierra20@uniandes.edu.co
@@ -92,9 +92,12 @@ public class Client extends Thread {
             // internally, the method to obtain the current buffer size is synchronized so that
             // this value won't be affected by a simultaneous message request being performed
             // while the current thread tries to access the buffer size.
-            while (buffer.getBufferSize() == buffer.getMaxBufferSize()) {
-                // relinquish the processor
-                yield();
+
+            synchronized (this) {
+                while (buffer.getBufferSize() == buffer.getMaxBufferSize()) {
+                    // relinquish the processor
+                    yield();
+                }
             }
 
             // adds the message to the buffer message list
@@ -105,9 +108,12 @@ public class Client extends Thread {
 
             // Once the message is added to the buffer, wait until a response is received
             try {
-                // message bag
-                System.out.println(clientName + " is waiting for a response from the " + "server");
-                this.wait();
+                synchronized (this) {
+                    // message bag
+                    this.wait();
+                    System.out.println(clientName + " is waiting for a response from the " + "server");
+
+                }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

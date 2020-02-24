@@ -1,4 +1,4 @@
-/*
+package src;/*
 MIT License
 
 Copyright (c) 2017 Universidad de los Andes - ISIS2203
@@ -23,7 +23,7 @@ SOFTWARE.
  */
 
 /**
- * Represents a Server that responds to a Client request.
+ * Represents a src.Server that responds to a Client request.
  */
 public class Server extends Thread {
     // ===============================================
@@ -91,8 +91,10 @@ public class Server extends Thread {
 
             // if the buffer is full for some reason (some other threads could have modified the
             // buffer) yield the processor to another thread
-            while (buffer.getBufferSize() == 0) {
-                yield();
+            synchronized (this) {
+                while (buffer.getBufferSize() == 0) {
+                    yield();
+                }
             }
 
             // processes the message from the buffer

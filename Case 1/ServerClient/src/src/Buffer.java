@@ -26,7 +26,7 @@ package src;
 import java.util.ArrayList;
 
 /**
- * Represents a Buffer that holds messages from the Client to be processed by the Server.
+ * Represents a Buffer that holds messages from the Client to be processed by the src.Server.
  * @author a.ortizg@uniandes.edu.co
  * @author lm.sierra20@uniandes.edu.co
  */

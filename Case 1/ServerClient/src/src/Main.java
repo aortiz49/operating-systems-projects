@@ -62,8 +62,8 @@ public class Main extends Thread {
             }
 
             String values = strings.toString();
-            servers = Integer.parseInt(values.split("#")[0]);
-            clients = Integer.parseInt(values.split("#")[1]);
+            clients = Integer.parseInt(values.split("#")[0]);
+            servers = Integer.parseInt(values.split("#")[1]);
             message_requests = Integer.parseInt(values.split("#")[2]);
             buffer_size = Integer.parseInt(values.split("#")[3]);
 
@@ -82,7 +82,7 @@ public class Main extends Thread {
      */
     public static void createServers(int pNumberOfServers) {
         for (int i = 0; i < pNumberOfServers; i++) {
-            serverList.add(new Server("Server" + i, buffer));
+            serverList.add(new Server("src.Server" + i, buffer));
         }
 
     }
@@ -117,6 +117,4 @@ public class Main extends Thread {
             server.start();
         }
     }
-
-
 }
