@@ -103,8 +103,6 @@ public class Server extends Thread {
             // Once the message is processed, notify the client who sent the message.
             clientMessage.getClient().notify();
         }
-
-
     }
 
 }

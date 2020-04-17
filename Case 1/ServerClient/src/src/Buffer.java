@@ -133,6 +133,7 @@ public class Buffer extends Thread {
         messages.add(pMessage);
         System.out.println("------ Client " + pMessage.getClient().getName() + " added message " + pMessage
                 .getMessage() + " to the buffer.");
+
     }
 
 

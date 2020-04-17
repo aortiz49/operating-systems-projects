@@ -66,6 +66,7 @@ public class Client extends Thread {
         clientName = pClientName;
         messageRequests = pMessageRequests;
         buffer = pBuffer;
+        String a = "";
     }
 
     // ===============================================
@@ -93,11 +94,11 @@ public class Client extends Thread {
             // this value won't be affected by a simultaneous message request being performed
             // while the current thread tries to access the buffer size.
 
-            synchronized (this) {
+
                 while (buffer.getBufferSize() == buffer.getMaxBufferSize()) {
                     // relinquish the processor
                     yield();
-                }
+
             }
 
             // adds the message to the buffer message list
@@ -110,9 +111,8 @@ public class Client extends Thread {
             try {
                 synchronized (this) {
                     // message bag
-                    this.wait();
+                    wait();
                     System.out.println(clientName + " is waiting for a response from the " + "server");
-
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
