@@ -33,7 +33,7 @@ import java.io.PrintWriter;
  * Represents the client protocol used to exchange messages with the server.
  *
  * @author a.ortizg@uniandes.edu.co
- * @author lm.sierra20@uniandes.edu.co
+ * @author lp.cardozo@uniandes.edu.co
  */
 public class ClientProtocol {
     //===================================================

@@ -43,7 +43,7 @@ public class Client {
 
         // executes the protocol on the client-side
         ClientProtocol.process(stdInd,reader,writer);
-        
+
         // closes streams and socket
         stdInd.close();
         writer.close();
