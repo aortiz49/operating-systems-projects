@@ -13,7 +13,7 @@ public class Server {
 
     public static void main(String[] args) throws IOException {
         ServerSocket ss = null;
-        boolean _continue = true;
+        boolean cont = true;
 
         System.out.println("Main Server: ...");
 
@@ -24,7 +24,7 @@ public class Server {
             System.exit(-1);
         }
 
-        while (_continue) {
+        while (cont) {
             // create the socket on the server-side
             // it stays blocked waiting for the client request
 
