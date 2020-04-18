@@ -3,6 +3,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.HashSet;
 
 /**
  * Represents a client in the system.
@@ -23,9 +25,6 @@ public class Client {
         Socket socket = null;
         PrintWriter writer = null;
         BufferedReader reader  = null;
-
-        System.out.println("Client....");
-
         try{
             // creates a socket no the client-side
             socket = new Socket(SERVER,PORT);
@@ -44,6 +43,15 @@ public class Client {
 
         // executes the protocol on the client-side
         ClientProtocol.process(stdInd,reader,writer);
+
+        HashSet<String> hashSet = new HashSet<>();
+        hashSet.add("AES");
+        hashSet.add("BLOWFISH");
+        hashSet.add("RSA");
+        hashSet.add("HMACSHA1");
+        hashSet.add("HMACSHA256");
+        hashSet.add("HMACSHA384");
+        hashSet.add("HMACSHA512");
 
         // closes streams and socket
         stdInd.close();

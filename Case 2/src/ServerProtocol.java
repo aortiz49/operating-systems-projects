@@ -9,18 +9,25 @@ public class ServerProtocol {
 
     public static void process(BufferedReader pIn, PrintWriter pOut) throws IOException{
         String inputLine;
-        String outputLine;
+        String outputLine = "";
 
         // reads input stream
         inputLine = pIn.readLine();
         System.out.println("Input to be processed: " + inputLine);
 
-        // process input
-        outputLine = inputLine;
+        if(inputLine.equals("\"HELLO\"")) {
+            // process input
+            outputLine = "\"OK\"";
+        }
 
         // writes in the output
         pOut.println(outputLine);
         System.out.println("Processed Exit: "+outputLine);
+
+
+        // reads input stream
+        inputLine = pIn.readLine();
+        System.out.println("Input #2 to be processed: " + inputLine);
 
     }
 }
