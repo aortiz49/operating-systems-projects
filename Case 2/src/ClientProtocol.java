@@ -64,7 +64,7 @@ public class ClientProtocol {
     /**
      * The SYN signal to be sent to the server to start communication.
      */
-    private static final String HELLO = "HELLO";
+    private static final String HELLO = "HOLA";
 
     /**
      * The SYN-ACK signal expected from the server.
@@ -191,6 +191,7 @@ public class ClientProtocol {
         sendCertificate(clientCertificate);
 
         // receive server response
+        receiveCertificate();
 
     }
 
@@ -228,9 +229,9 @@ public class ClientProtocol {
     private static void ACK() {
         String message = "Message to server: ALGORITMOS:" + AES + ":" + RSA + ":" + HMAC_SHA1;
         // send the algorithms string to the server
-        System.out.println("\n========== SENDING ALGORITHMS ==========");
+        System.out.println("\n========== ACK ==========");
         System.out.println(message);
-        outputFromClient.println(message);
+        outputFromClient.println("ALGORITMOS:" + AES +":" + RSA + ":" + HMAC_SHA1);
     }
 
     /**
@@ -248,7 +249,7 @@ public class ClientProtocol {
             isAccepted = true;
         }
 
-        else if ((fromServer = responseFromServer.readLine()).equals(ERROR)) {
+        else if ((fromServer).equals(ERROR)) {
             System.out.println("\n========== SERVER RESP ==========");
             System.out.println("Response from server: " + ERROR);
         }
