@@ -193,6 +193,11 @@ public class ClientProtocol {
         // receive server response
         receiveCertificate();
 
+
+        //// stage 2b
+
+        //C(K_C,K_sc)
+
     }
 
     //===================================================
@@ -317,7 +322,7 @@ public class ClientProtocol {
 
         // print the server response
         if ((fromServer = responseFromServer.readLine()).equals(OK)) {
-            System.out.println("\n========== SERVER RESP ==========");
+            System.out.println("\n========== RECEIVING SERVER CERTIFICATE ==========");
             System.out.println("Response from server: " + OK);
         }
 
