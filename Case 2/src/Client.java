@@ -43,16 +43,7 @@ public class Client {
 
         // executes the protocol on the client-side
         ClientProtocol.process(stdInd,reader,writer);
-
-        HashSet<String> hashSet = new HashSet<>();
-        hashSet.add("AES");
-        hashSet.add("BLOWFISH");
-        hashSet.add("RSA");
-        hashSet.add("HMACSHA1");
-        hashSet.add("HMACSHA256");
-        hashSet.add("HMACSHA384");
-        hashSet.add("HMACSHA512");
-
+        
         // closes streams and socket
         stdInd.close();
         writer.close();
