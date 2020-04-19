@@ -10,3 +10,6 @@ delegado 6: recibio-OK-continuando.
 delegado 6: envio-llave K_SC al cliente. continuado.
 delegado 6: envio-3296-reto al cliente. continuando 
 delegado 6: recibio-3296-reto correcto. continuado.
+delegado 6: recibio-NDY0Nw==-continuando
+delegado 6: envio-2327-cifrado con K_SC. continuado.
+delegado 6: recibio-OK-Terminando exitosamente.
