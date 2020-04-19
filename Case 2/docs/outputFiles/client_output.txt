@@ -1,0 +1,44 @@
+Write the connection port with the server: 4545
+
+========== SYN ==========
+Message to server: HOLA
+
+========== SYN-ACK ==========
+Response from server: OK
+
+========== ACK ==========
+Message to server: ALGORITMOS:AES:RSA:HMACSHA1
+
+========== SERVER RESP ==========
+Response from server: OK
+
+========== GENERATING CLIENT CERTIFICATE  ==========
+CommunicationProtocol.Client certificate generated.
+
+========== SENDING CLIENT CERTIFICATE TO SERVER ==========
+Certificate to send: MIIBnDCCAQWgAwIBAgIBATANBgkqhkiG9w0BAQUFADAUMRIwEAYDVQQDDAlsb2NhbGhvc3QwHhcNMjAwNDE5MDQyMjQzWhcNMzAwNDE5MDQyMjQzWjAUMRIwEAYDVQQDDAlsb2NhbGhvc3QwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAJ3A4QOQukhbKAGLtZoH5CzIOtMFx63CT2AHbjSban7XMMQsupin4Fx8zMOtdTgyr1z/jl3QyH24iv52lpvp58RuZSGw22CeaSCHRHHNzPSLT1hdhad0v8BYX1ACNxjw9drqDq/Qt7eCFxMhTVYEEBACPdThQHCYL4rPFWPZ7vBPAgMBAAEwDQYJKoZIhvcNAQEFBQADgYEAcTeYzAtY3LXGgTNiYeRTc1K9xNr2l/TRqiDhD1/9xvSXp72Frq+UR9gKZaFBsmjFrKPjx+HeCOc9zgCLK7V+r0NlT7/MPlW8dmNaLP2C7xhfElHM+lJ0G/jsWVja5Cj+c30p8BNdSOltK7PXYpMLtnbAl4DHfGhjzB1Ojl7tS+A=
+
+========== RECEIVING SERVER CERTIFICATE ==========
+Response from server: OK
+Server certificate: MIIBnDCCAQWgAwIBAgIBATANBgkqhkiG9w0BAQUFADAUMRIwEAYDVQQDDAlsb2NhbGhvc3QwHhcNMjAwNDE5MDE1MjI0WhcNMzAwNDE5MDE1MjI0WjAUMRIwEAYDVQQDDAlsb2NhbGhvc3QwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK3rb7Nte6WK+0jG45VZRtstnaFvtOLP/6iR8gPZXrA/VNqSN3EMZJdL3e2BhFFHbxBa7vvF7T5s7FNKCZScpNvgVAu0Vauf3ymZdl4PlpWnJff1KSzWFwM3/CYpPoPU1cjWsxc0ChG8ZRzm6BQPRGKw7ZrWCPz211kFaH7zooMZAgMBAAEwDQYJKoZIhvcNAQEFBQADgYEAFMDou/Q+leWPYrbz0ywHYysapKrVfJBZV7jB1IC7/7EzAnNBtJWFSnpAg2FCEenQfY91UmAWZ9SWY9bbqhDDzzpCVFTc9u86oHKDgL/ewGFQLrrGMxtVyXY9s7w434RLkuNscd4cxSUsQQVTnFJl9hjl8wpFf+jx77uR1acSs5A=
+Message to server: OK
+
+========== DECIPHERING SECRET KEY FROM SERVER ==========
+Private symmetric server/client key from server: [127, -28, -1, -29, 12, -57, 96, -57, 98, -107, 69, 2, -100, -84, -38, -34]
+
+========== DECIPHERING CHALLENGE FROM SERVER ==========
+The deciphered bytes from challenge: [-33, 111, 122]
+
+========== OBTAINING SERVER'S PUBLIC KEY ==========
+Server public key: RSA Public Key [c7:b1:8d:90:7d:63:07:76:8e:67:95:cd:bb:17:e5:3f:b5:2d:37:2b],[56:66:d1:a4]
+        modulus: adeb6fb36d7ba58afb48c6e3955946db2d9da16fb4e2cfffa891f203d95eb03f54da9237710c64974bdded818451476f105aeefbc5ed3e6cec534a09949ca4dbe0540bb455ab9fdf2999765e0f9695a725f7f5292cd6170337fc26293e83d4d5c8d6b317340a11bc651ce6e8140f4462b0ed9ad608fcf6d75905687ef3a28319
+public exponent: 10001
+
+========== SENDING CHALLENGE TO SERVER ==========
+Challenge to server: [34, -55, 71, 98, 21, -82, -72, -24, 34, -120, -16, -30, -113, 120, -18, 112, 45, -87, 63, -13, 124, 1, 45, -33, 54, -85, -29, 60, -19, 55, 91, 76, -54, -27, 74, -100, -27, -126, 21, 28, -128, 111, -89, 53, -107, -9, -76, -45, 119, 117, -96, 39, 4, 114, -74, -62, -39, -46, 28, -105, 99, 64, 100, 118, 76, 27, 60, 79, -34, -12, 123, 104, -66, 42, -101, 64, -120, 55, 1, 75, 31, 62, 16, 36, 8, 82, -10, 124, -50, 0, -90, -51, -97, 65, -100, 80, -65, -107, 121, -53, -80, 121, 119, 114, -74, -45, 91, 28, 75, 114, -127, -71, 74, -120, -93, -21, 25, -64, -57, 88, -95, 75, -81, -4, 102, 82, -69, -85]
+
+========== RECEIVING SERVER CHALLENGE RESPONSE ==========
+Message from server: OK
+
+========== SENDING AGENT ID TO SERVER ==========
+Please enter your agent ID: 

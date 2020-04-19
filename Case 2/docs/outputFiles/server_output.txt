@@ -1,0 +1,12 @@
+MAESTRO: Cliente 6 aceptado.
+delegado 6: Empezando atencion.
+delegado 6: recibio-HOLA-continuando.
+delegado 6: recibio-ALGORITMOS:AES:RSA:HMACSHA1-continuando.
+delegado 6: envio-OK-continuando.
+delegado 6: recibio-certificado del cliente. continuando.
+delegado 6: envio-OK-continuando.
+delegado 6: envio- certificado del servidor. continuando.
+delegado 6: recibio-OK-continuando.
+delegado 6: envio-llave K_SC al cliente. continuado.
+delegado 6: envio-3296-reto al cliente. continuando 
+delegado 6: recibio-3296-reto correcto. continuado.
