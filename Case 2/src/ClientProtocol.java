@@ -26,18 +26,17 @@ SOFTWARE.
 //===================================================
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigInteger;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
-import java.security.Security;
-import java.security.cert.CertificateEncodingException;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
+import java.security.*;
+import java.security.cert.*;
+import java.util.Arrays;
 import java.util.Calendar;
 
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 
 import org.bouncycastle.asn1.x500.X500Name;
@@ -45,6 +44,8 @@ import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.X509v3CertificateBuilder;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
+import org.bouncycastle.jcajce.provider.asymmetric.X509;
+import org.bouncycastle.jcajce.provider.asymmetric.x509.CertificateFactory;
 import org.bouncycastle.operator.ContentSigner;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
@@ -191,12 +192,36 @@ public class ClientProtocol {
         sendCertificate(clientCertificate);
 
         // receive server response
-        receiveCertificate();
+        X509Certificate serverCertificate = receiveCertificate();
 
 
         //// stage 2b
 
-        //C(K_C,K_sc)
+        //C(K_C+,K_sc) private key from server/client and public key from client
+        // ciphering the private server/client key with public client key
+        // russian notation: K^{sc} -> K${c} -> with RSA asymmetric
+
+
+        // obtain bytes from asymmetric server/client key
+        byte[] symmetricServerClientKey =
+                decipherPrivateSymmetricServerClientKeyFromServer(keypair);
+
+
+
+
+        //-------debug point
+        // obtain bytes from challenge
+        byte[] challengeBytes = decipherChallengeFromServer(symmetricServerClientKey);
+
+        // obtain server's public key
+        PublicKey serverPublicKey = getServerPublicKey(serverCertificate);
+
+        // send challenge to server with deciphered server's public key
+        sendChallengeToServer(serverPublicKey, challengeBytes);
+
+        // receive server challenge response
+        receiveServerChallengeResponse();
+        
 
     }
 
@@ -236,7 +261,7 @@ public class ClientProtocol {
         // send the algorithms string to the server
         System.out.println("\n========== ACK ==========");
         System.out.println(message);
-        outputFromClient.println("ALGORITMOS:" + AES +":" + RSA + ":" + HMAC_SHA1);
+        outputFromClient.println("ALGORITMOS:" + AES + ":" + RSA + ":" + HMAC_SHA1);
     }
 
     /**
@@ -317,7 +342,7 @@ public class ClientProtocol {
         outputFromClient.println(certString);
     }
 
-    public static void receiveCertificate() throws IOException {
+    private static X509Certificate receiveCertificate() throws IOException {
         String fromServer = "";
 
         // print the server response
@@ -334,6 +359,73 @@ public class ClientProtocol {
         // send OK (assuming the server's certificate in this case will be OK)
         outputFromClient.println(OK);
 
+        // generate server certificate
+        byte[] serverCertificateBytes = DatatypeConverter.parseBase64Binary(fromServer);
+        CertificateFactory factory = new CertificateFactory();
+        X509Certificate serverCertificate = null;
+        try {
+            serverCertificate = (X509Certificate) factory
+                    .engineGenerateCertificate(new ByteArrayInputStream(serverCertificateBytes));
+        } catch (CertificateException e) {
+            System.out.println(e.getLocalizedMessage());
+        }
+        return serverCertificate;
     }
+
+    public static byte[] decipherPrivateSymmetricServerClientKeyFromServer(KeyPair pKeyPair)
+            throws IOException {
+
+        Key privateKey = pKeyPair.getPrivate();
+        String fromServer = responseFromServer.readLine();
+
+        byte[] privateKeyBytes = Asymmetric
+                .descifrar(privateKey, RSA, DatatypeConverter.parseBase64Binary(fromServer));
+        System.out.println("Private symmetric server/client key from server: " + Arrays
+                .toString(privateKeyBytes));
+
+        return privateKeyBytes;
+    }
+
+    public static byte[] decipherChallengeFromServer(byte[] pServerClientKeyBytes)
+            throws IOException {
+        // the challenge string
+        String fromServer = responseFromServer.readLine();
+        SecretKey secretKey = new SecretKeySpec(pServerClientKeyBytes, "AES");
+
+        byte[] challengeBytes =
+                Symmetric.decipher(secretKey, DatatypeConverter.parseBase64Binary(fromServer));
+
+        System.out.println(
+                "The deciphered bytes from challenge: " + Arrays.toString(challengeBytes));
+        return challengeBytes;
+    }
+
+    private static PublicKey getServerPublicKey(X509Certificate pServerCertificate) {
+        System.out.println("Server public key: " + pServerCertificate.getPublicKey());
+        return pServerCertificate.getPublicKey();
+    }
+
+    private static void sendChallengeToServer(PublicKey pServerKey, byte[] pChallengeBytes) {
+
+        // obtain string representation of the challenge bytes
+        String challengeStr = DatatypeConverter.printBase64Binary(pChallengeBytes);
+
+        // cipher the challenge with server public key
+        byte[] cipheredChallenge = Asymmetric.cifrar(pServerKey, RSA, challengeStr);
+
+        String cipheredString = DatatypeConverter.printBase64Binary(cipheredChallenge);
+
+        // send challenge to the server
+        System.out.println("\n========== SENDING CHALLENGE TO SERVER ==========");
+        System.out.println("Challenge to server: " + Arrays.toString(cipheredChallenge));
+        outputFromClient.println(cipheredString);
+    }
+
+    private static void receiveServerChallengeResponse() throws IOException {
+        // the server response
+        String fromServer = responseFromServer.readLine();
+        System.out.println("Message from server: " + fromServer);
+    }
+
 
 }
