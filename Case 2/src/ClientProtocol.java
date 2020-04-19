@@ -32,6 +32,7 @@ import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.security.*;
 import java.security.cert.*;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.Arrays;
 import java.util.Calendar;
 
@@ -221,7 +222,7 @@ public class ClientProtocol {
 
         // receive server challenge response
         receiveServerChallengeResponse();
-        
+
 
     }
 
@@ -404,6 +405,7 @@ public class ClientProtocol {
         System.out.println("Server public key: " + pServerCertificate.getPublicKey());
         return pServerCertificate.getPublicKey();
     }
+
 
     private static void sendChallengeToServer(PublicKey pServerKey, byte[] pChallengeBytes) {
 

@@ -1,4 +1,5 @@
 import javax.crypto.Cipher;
+import javax.xml.bind.DatatypeConverter;
 import java.security.Key;
 
 public class Asymmetric {
@@ -8,14 +9,14 @@ public class Asymmetric {
 
         try {
             Cipher cifrador = Cipher.getInstance(algoritmo);
-            byte[] textoClaro = texto.getBytes();
+            byte[] textoClaro = DatatypeConverter.parseBase64Binary(texto);
+
 
             cifrador.init(Cipher.ENCRYPT_MODE, llave);
             textoCifrado = cifrador.doFinal(textoClaro);
 
             return textoCifrado;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.out.println("Excepción: " + e.getMessage());
             return null;
         }
@@ -28,8 +29,7 @@ public class Asymmetric {
             Cipher cifrador = Cipher.getInstance(algoritmo);
             cifrador.init(Cipher.DECRYPT_MODE, llave);
             textoClaro = cifrador.doFinal(texto);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.out.println("Excepción: " + e.getMessage());
             return null;
         }
@@ -39,7 +39,7 @@ public class Asymmetric {
 
     public static void imprimir(byte[] contenido) {
         int i = 0;
-        for (;i < contenido.length - 1; i++) {
+        for (; i < contenido.length - 1; i++) {
             System.out.print(contenido[i] + " ");
         }
         System.out.println(contenido[i] + " ");
