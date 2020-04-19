@@ -45,10 +45,10 @@ public class Asymmetric {
     /**
      * Encrypts the given text using an algorithm of choice with a given key.
      *
-     * @param pKey the key used to encrypt the data
+     * @param pKey       the key used to encrypt the data
      * @param pAlgorithm the type of algorithm to use for the encryption
-     * @param pText the text to be encrypted
-     * @return the byte representation of the encrypted text
+     * @param pText      the text to be encrypted
+     * @return the byte representation of the encrypted text.
      */
     public static byte[] encrypt(Key pKey, String pAlgorithm, String pText) {
         byte[] cipheredText;
@@ -71,10 +71,10 @@ public class Asymmetric {
     /**
      * Decrypts the given text using an algorithm of choice with a given key.
      *
-     * @param pKey the key used to encrypt the data
+     * @param pKey       the key used to encrypt the data
      * @param pAlgorithm the type of algorithm to use for the decryption
-     * @param pText the text to be decrypted
-     * @return the byte representation of the decrypted text
+     * @param pText      the text to be decrypted
+     * @return the byte representation of the decrypted text.
      */
     public static byte[] decipher(Key pKey, String pAlgorithm, byte[] pText) {
         byte[] clearText;

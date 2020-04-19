@@ -126,6 +126,12 @@ public class ClientProtocol {
      * @param stdIn the standard console input from the user
      * @param pIn   the input buffer to the client from the server
      * @param pOut  the output sent from the client
+     * @throws IOException               when there is an I/O error.
+     * @throws NoSuchAlgorithmException  when a particular cryptographic
+     *                                   algorithm is requested but is not available in the
+     *                                   environment.
+     * @throws OperatorCreationException when there is a BouncyCastle exception.
+     * @throws CertificateException      when there is a problem with the certificate.
      */
     public static void process(BufferedReader stdIn, BufferedReader pIn, PrintWriter pOut)
             throws IOException, NoSuchAlgorithmException, CertificateException,
@@ -296,6 +302,7 @@ public class ClientProtocol {
      * Checks if the algorithm acknowledge string was accepted.
      *
      * @return true if the server accepted the string. False otherwise.
+     * @throws IOException when there is an I/O error.
      */
     private static boolean accepted() throws IOException {
         boolean isAccepted = false;
@@ -320,8 +327,8 @@ public class ClientProtocol {
      *
      * @param keyPair the asymmetric key pair used to build the certificate
      * @return the X509 certificate
-     * @throws OperatorCreationException if there is an exception when creating a certificate
-     * @throws CertificateException      if there is an exception when creating a certificate
+     * @throws OperatorCreationException when there is a BouncyCastle exception.
+     * @throws CertificateException      when there is an error with a certificate.
      */
     private static X509Certificate generateCertificate(KeyPair keyPair)
             throws OperatorCreationException, CertificateException {
@@ -348,7 +355,8 @@ public class ClientProtocol {
      * Generates the asymmetric key pair that will be used to create the certificate.
      *
      * @return the 1024-bit keypair
-     * @throws NoSuchAlgorithmException if the algorithm that is requested isn't in the environment
+     * @throws NoSuchAlgorithmException when the algorithm that is requested isn't in the
+     * environment.
      */
     private static KeyPair generateAsymmetricKeyPair() throws NoSuchAlgorithmException {
         // generates the asymmetric keys
@@ -362,6 +370,7 @@ public class ClientProtocol {
      * Converts the X509 certificate to a string and sends it to the server.
      *
      * @param pCertificate the client's X509 certificate
+     * @throws CertificateEncodingException when there is an error with the certificate.
      */
     public static void sendCertificate(X509Certificate pCertificate)
             throws CertificateEncodingException {
@@ -376,7 +385,7 @@ public class ClientProtocol {
      * Returns the server's X509 certificate.
      *
      * @return the X509 certificate.
-     * @throws IOException if there is an error with an I/O operation
+     * @throws IOException when there is an error with an I/O operation.
      */
     private static X509Certificate receiveCertificate() throws IOException {
         String fromServer = "";
@@ -413,7 +422,7 @@ public class ClientProtocol {
      *
      * @param pKeyPair the server's key pair containing its public and private keys
      * @return the byte representation of the secret key
-     * @throws IOException if there is an error with an I/O operation
+     * @throws IOException when there is an error with an I/O operation.
      */
     public static byte[] decipherSecretKeyFromServer(KeyPair pKeyPair) throws IOException {
         System.out.println("\n========== DECIPHERING SECRET KEY FROM SERVER ==========");
@@ -433,7 +442,7 @@ public class ClientProtocol {
      *
      * @param pServerClientKeyBytes the secret key between sever/client
      * @return the byte representation of the deciphered challenge
-     * @throws IOException if there is an error with an I/O operation
+     * @throws IOException when there is an error with an I/O operation.
      */
     public static byte[] decipherChallengeFromServer(byte[] pServerClientKeyBytes)
             throws IOException {
@@ -442,8 +451,8 @@ public class ClientProtocol {
         String fromServer = responseFromServer.readLine();
         symmetricServerClientKey = new SecretKeySpec(pServerClientKeyBytes, AES);
 
-        byte[] challengeBytes = Symmetric.decrypt(symmetricServerClientKey,
-                                                  DatatypeConverter.parseBase64Binary(fromServer));
+        byte[] challengeBytes = Symmetric
+                .decrypt(symmetricServerClientKey, DatatypeConverter.parseBase64Binary(fromServer));
 
         System.out
                 .println("The deciphered bytes from challenge: " + Arrays.toString(challengeBytes));
@@ -487,7 +496,7 @@ public class ClientProtocol {
     /**
      * Handles the reception of the server response after sending the challenge.
      *
-     * @throws IOException if there is an error with an I/O operation
+     * @throws IOException when there is an error with an I/O operation.
      */
     private static void receiveServerChallengeResponse() throws IOException {
         System.out.println("\n========== RECEIVING SERVER CHALLENGE RESPONSE ==========");
@@ -500,7 +509,7 @@ public class ClientProtocol {
     /**
      * Sends the id of the agent to the server.
      *
-     * @throws IOException if there is an error with an I/O operation
+     * @throws IOException when there is an error with an I/O operation.
      */
     private static void sendIdToServer() throws IOException {
         System.out.println("\n========== SENDING AGENT ID TO SERVER ==========");
@@ -516,7 +525,7 @@ public class ClientProtocol {
     /**
      * Decipher the server response to the id request.
      *
-     * @throws IOException if there is an error with an I/O operation
+     * @throws IOException when there is an error with an I/O operation.
      */
     private static void decipherResponseToSeverIdRequest() throws IOException {
         String fromServer = responseFromServer.readLine();

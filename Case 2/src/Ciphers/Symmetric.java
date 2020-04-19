@@ -38,16 +38,16 @@ import javax.crypto.SecretKey;
 public class Symmetric {
 
     /**
-     * Constant used to determine the padding mechanism
+     * Constant used to determine the padding mechanism.
      */
     private final static String PADDING = "AES/ECB/PKCS5Padding";
 
     /**
      * Encrypts the given pText using using an AES padding mechanism with a given key.
      *
-     * @param pKey the pKey used to encrypt the data
+     * @param pKey  the pKey used to encrypt the data
      * @param pText the pText to be encrypted
-     * @return the byte representation of the encrypted pText
+     * @return the byte representation of the encrypted pText.
      */
     public static byte[] encrypt(SecretKey pKey, String pText) {
         byte[] cipheredText;
@@ -69,9 +69,9 @@ public class Symmetric {
     /**
      * Decrypts the given pText using using an AES padding mechanism with a given key.
      *
-     * @param pKey the pKey used to decrypt the data
+     * @param pKey  the pKey used to decrypt the data
      * @param pText the pText to be encrypted
-     * @return the byte representation of the decrypted pText
+     * @return the byte representation of the decrypted pText.
      */
     public static byte[] decrypt(SecretKey pKey, byte[] pText) {
         byte[] clearText;
