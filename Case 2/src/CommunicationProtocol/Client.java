@@ -1,3 +1,5 @@
+package CommunicationProtocol;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -36,7 +38,7 @@ public class Client {
         BufferedReader reader  = null;
         int port;
 
-        System.out.println("Client....");
+        System.out.println("CommunicationProtocol.Client....");
         System.out.print("Write the connection port with the server: ");
         port = sc.nextInt();
 
