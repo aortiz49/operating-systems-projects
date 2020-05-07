@@ -1,4 +1,4 @@
-package srv202010;
+package communication_protocol.server;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
@@ -42,40 +42,40 @@ public class S {
 	public static final String HMACSHA256 = "HMACSHA256";
 	public static final String HMACSHA384 = "HMACSHA384";
 	public static final String HMACSHA512 = "HMACSHA512";
-	
+
 	public static byte[] se (byte[] msg, Key key , String algo)
-			throws IllegalBlockSizeException, BadPaddingException, InvalidKeyException, 
+			throws IllegalBlockSizeException, BadPaddingException, InvalidKeyException,
 			NoSuchAlgorithmException, NoSuchPaddingException {
-		algo = algo + 
+		algo = algo +
 				(algo.equals(DES) || algo.equals(AES)?"/ECB/PKCS5Padding":"");
-		Cipher decifrador = Cipher.getInstance(algo); 
-		decifrador.init(Cipher.ENCRYPT_MODE, key); 
+		Cipher decifrador = Cipher.getInstance(algo);
+		decifrador.init(Cipher.ENCRYPT_MODE, key);
 		return decifrador.doFinal(msg);
 	}
-	
+
 	public static byte[] sd (byte[] msg, Key key , String algo)
-			throws IllegalBlockSizeException, BadPaddingException, InvalidKeyException, 
+			throws IllegalBlockSizeException, BadPaddingException, InvalidKeyException,
 			NoSuchAlgorithmException, NoSuchPaddingException {
-		algo = algo + 
+		algo = algo +
 				(algo.equals(DES) || algo.equals(AES)?"/ECB/PKCS5Padding":"");
-		Cipher decifrador = Cipher.getInstance(algo); 
-		decifrador.init(Cipher.DECRYPT_MODE, key); 
+		Cipher decifrador = Cipher.getInstance(algo);
+		decifrador.init(Cipher.DECRYPT_MODE, key);
 		return decifrador.doFinal(msg);
 	}
-	
-	public static byte[] ae (byte[] msg, Key key , String algo) 
-			throws IllegalBlockSizeException, BadPaddingException, InvalidKeyException, 
+
+	public static byte[] ae (byte[] msg, Key key , String algo)
+			throws IllegalBlockSizeException, BadPaddingException, InvalidKeyException,
 			NoSuchAlgorithmException, NoSuchPaddingException {
-		Cipher decifrador = Cipher.getInstance(algo); 
-		decifrador.init(Cipher.ENCRYPT_MODE, key); 
+		Cipher decifrador = Cipher.getInstance(algo);
+		decifrador.init(Cipher.ENCRYPT_MODE, key);
 		return decifrador.doFinal(msg);
 	}
-	
-	public static byte[] ad (byte[] msg, Key key , String algo) 
-			throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, 
+
+	public static byte[] ad (byte[] msg, Key key , String algo)
+			throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException,
 			IllegalBlockSizeException, BadPaddingException {
-		Cipher decifrador = Cipher.getInstance(algo); 
-		decifrador.init(Cipher.DECRYPT_MODE, key); 
+		Cipher decifrador = Cipher.getInstance(algo);
+		decifrador.init(Cipher.DECRYPT_MODE, key);
 		return decifrador.doFinal(msg);
 	}
 
@@ -87,7 +87,7 @@ public class S {
 		byte[] bytes = mac.doFinal(msg);
 		return bytes;
 	}
-	
+
 	public static boolean vi(byte[] msg, Key key, String algo, byte [] hash ) throws Exception
 	{
 		byte [] nuevo = hdg(msg, key, algo);
@@ -100,7 +100,7 @@ public class S {
 		return true;
 	}
 
-	public static SecretKey kgg(String algoritmo) 
+	public static SecretKey kgg(String algoritmo)
 			throws NoSuchAlgorithmException, NoSuchProviderException	{
 		int tamLlave = 0;
 		if (algoritmo.equals(DES))
@@ -111,9 +111,9 @@ public class S {
 			tamLlave = 128;
 		else if (algoritmo.equals(RC4))
 			tamLlave = 128;
-		
+
 		if (tamLlave == 0) throw new NoSuchAlgorithmException();
-		
+
 		KeyGenerator keyGen;
 		SecretKey key;
 		keyGen = KeyGenerator.getInstance(algoritmo,"BC");
@@ -121,12 +121,12 @@ public class S {
 		key = keyGen.generateKey();
 		return key;
 	}
-		
+
 	public static KeyPair grsa() throws NoSuchAlgorithmException {
 		KeyPairGenerator kpGen = KeyPairGenerator.getInstance(RSA);
 		kpGen.initialize(1024, new SecureRandom());
 		return kpGen.generateKeyPair();
-	}	
+	}
 
 	public static X509Certificate gc(KeyPair keyPair)
 	        throws OperatorCreationException, CertificateException {

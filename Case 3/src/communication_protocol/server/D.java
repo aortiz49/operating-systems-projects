@@ -1,4 +1,4 @@
-package srv202010;
+package communication_protocol.server;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -39,42 +39,42 @@ public class D extends Thread {
 	private static File file;
 	public static final int numCadenas = 13;
 
-	
+
 	public static void init(X509Certificate pCertSer, KeyPair pKeyPairServidor, File pFile) {
 		certSer = pCertSer;
 		keyPairServidor = pKeyPairServidor;
 		file = pFile;
 	}
-	
+
 	public D (Socket csP, int idP) {
 		sc = csP;
 		dlg = new String("delegado " + idP + ": ");
 		try {
-		mybyte = new byte[520]; 
+		mybyte = new byte[520];
 		mybyte = certSer.getEncoded();
 		} catch (Exception e) {
 			System.out.println("Error creando el thread" + dlg);
 			e.printStackTrace();
 		}
 	}
-	
+
 	private boolean validoAlgHMAC(String nombre) {
-		return ((nombre.equals(S.HMACMD5) || 
+		return ((nombre.equals(S.HMACMD5) ||
 			 nombre.equals(S.HMACSHA1) ||
 			 nombre.equals(S.HMACSHA256) ||
 			 nombre.equals(S.HMACSHA384) ||
 			 nombre.equals(S.HMACSHA512)
 			 ));
 	}
-	
+
 	/*
-	 * Generacion del archivo log. 
-	 * Nota: 
-	 * - Debe conservar el metodo . 
+	 * Generacion del archivo log.
+	 * Nota:
+	 * - Debe conservar el metodo .
 	 * - Es el Ãºnico metodo permitido para escribir en el log.
 	 */
 	private void escribirMensaje(String pCadena) {
-		
+
 		try {
 			FileWriter fw = new FileWriter(file,true);
 			fw.write(pCadena + "\n");
@@ -84,7 +84,7 @@ public class D extends Thread {
 		}
 
 	}
-	
+
 	public void run() {
 		String[] cadenas;
 		cadenas = new String[numCadenas];
@@ -108,7 +108,7 @@ public class D extends Thread {
 					cadenas[0] = dlg + REC + linea + "-continuando.";
 					System.out.println(cadenas[0]);
 				}
-				
+
 				/***** Fase 2:  *****/
 				linea = dc.readLine();
 				if (!(linea.contains(SEPARADOR) && linea.split(SEPARADOR)[0].equals(ALGORITMOS))) {
@@ -116,7 +116,7 @@ public class D extends Thread {
 					sc.close();
 					throw new Exception(dlg + ERROR + REC + linea +"-terminando.");
 				}
-				
+
 				String[] algoritmos = linea.split(SEPARADOR);
 				if (!algoritmos[1].equals(S.DES) && !algoritmos[1].equals(S.AES) &&
 					!algoritmos[1].equals(S.BLOWFISH) && !algoritmos[1].equals(S.RC4)){
@@ -140,8 +140,8 @@ public class D extends Thread {
 				cadenas[2] = dlg + ENVIO + OK + "-continuando.";
 				System.out.println(cadenas[2]);
 
-				
-				/***** Fase 3: Recibe certificado del cliente *****/				
+
+				/***** Fase 3: Recibe certificado del cliente *****/
 				String strCertificadoCliente = dc.readLine();
 				byte[] certificadoClienteBytes = new byte[520];
 				certificadoClienteBytes = toByteArray(strCertificadoCliente);
@@ -153,12 +153,12 @@ public class D extends Thread {
 				ac.println(OK);
 				cadenas[4] = dlg + ENVIO + OK + "-continuando.";
 				System.out.println(cadenas[4]);
-				
+
 				/***** Fase 4: Envia certificado del servidor *****/
 				String strSerCert = toHexString(mybyte);
 				ac.println(strSerCert);
 				cadenas[5] = dlg + ENVIO + " certificado del servidor. continuando.";
-				System.out.println(cadenas[5]);	
+				System.out.println(cadenas[5]);
 				linea = dc.readLine();
 				if (!linea.equals(OK)) {
 				    sc.close();
@@ -170,14 +170,14 @@ public class D extends Thread {
 
 				/***** Fase 5: Envia llave simetrica *****/
 				SecretKey simetrica = S.kgg(algoritmos[1]);
-				byte [ ] ciphertext1 = S.ae(simetrica.getEncoded(), 
+				byte [ ] ciphertext1 = S.ae(simetrica.getEncoded(),
 						                 certificadoCliente.getPublicKey(), algoritmos[2]);
 				ac.println(toHexString(ciphertext1));
 				cadenas[7] = dlg +  ENVIO + "llave K_SC al cliente. continuado.";
 				System.out.println(cadenas[7]);
-				
+
 				/***** Fase 5: Envia reto *****/
-				Random rand = new Random(); 
+				Random rand = new Random();
 				int intReto = rand.nextInt(999);
 				String strReto = intReto+"";
 				while (strReto.length()%4!=0) strReto += "0";
@@ -192,7 +192,7 @@ public class D extends Thread {
 				/***** Fase 6: Recibe reto del cliente *****/
 				linea = dc.readLine();
 				byte[] retodelcliente = S.ad(
-						toByteArray(linea), 
+						toByteArray(linea),
 						keyPairServidor.getPrivate(), algoritmos[2] );
 				String strdelcliente = toHexString(retodelcliente);
 				if (strdelcliente.equals(reto)) {
@@ -204,7 +204,7 @@ public class D extends Thread {
 				    sc.close();
 					throw new Exception(dlg + REC + strdelcliente + "-ERROR en reto. terminando");
 				}
-								
+
 				/***** Fase 7: Recibe identificador de usuario *****/
 				linea = dc.readLine();
 				byte[] retoByte = toByteArray(linea);
@@ -212,7 +212,7 @@ public class D extends Thread {
 				String nombre = toHexString(ciphertext2);
 				cadenas[10] = dlg + REC + nombre + "-continuando";
 				System.out.println(cadenas[10]);
-				
+
 				/***** Fase 8: Envia hora de registro *****/
 				Calendar rightNow = Calendar.getInstance();
 				int hora = rightNow.get(Calendar.HOUR_OF_DAY);
@@ -228,8 +228,8 @@ public class D extends Thread {
 				ac.println(toHexString(ciphertext3));
 				cadenas[11] = dlg + ENVIO + strvalor + "-cifrado con K_SC. continuado.";
 				System.out.println(cadenas[11]);
-		        
-				linea = dc.readLine();	
+
+				linea = dc.readLine();
 				if (linea.equals(OK)) {
 					cadenas[12] = dlg + REC + linea + "-Terminando exitosamente.";
 					System.out.println(cadenas[12]);
@@ -238,16 +238,16 @@ public class D extends Thread {
 			        System.out.println(cadenas[12]);
 				}
 		        sc.close();
-		        
+
 			    for (int i=0;i<numCadenas;i++) {
 				    escribirMensaje(cadenas[i]);
 			    }
-			   
+
 	        } catch (Exception e) {
 	          e.printStackTrace();
 	        }
 	}
-	
+
 	public static String toHexString(byte[] array) {
 	    return DatatypeConverter.printBase64Binary(array);
 	}
@@ -255,5 +255,5 @@ public class D extends Thread {
 	public static byte[] toByteArray(String s) {
 	    return DatatypeConverter.parseBase64Binary(s);
 	}
-	
+
 }
