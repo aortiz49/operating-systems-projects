@@ -67,7 +67,6 @@ public class C {
 		for (int i=0;true;i++) {
 			try {
 
-
 					Socket sc = ss.accept();
 					System.out.println(MAESTRO + "Client " + i + " was accepted.");
 					D d = new D(sc,i);

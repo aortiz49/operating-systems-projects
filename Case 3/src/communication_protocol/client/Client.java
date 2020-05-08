@@ -54,6 +54,58 @@ public class Client {
      */
     public static final String SERVER = "localhost";
 
+    private Scanner sc;
+    private Socket socket;
+    private PrintWriter writer;
+    private BufferedReader reader;
+    private int port;
+
+    /**
+     * Constructs a new client
+     *
+     * @throws IOException               when there is an I/O error.
+     * @throws NoSuchAlgorithmException  when a particular cryptographic
+     *                                   algorithm is requested but is not available in the
+     *                                   environment.
+     * @throws OperatorCreationException when there is a BouncyCastle exception.
+     * @throws CertificateException      when there is a problem with the certificate.
+     */
+    public Client() throws IOException, NoSuchAlgorithmException, OperatorCreationException,
+            CertificateException {
+
+        try {
+
+            this.sc = new Scanner(System.in);
+
+            System.out.println("CommunicationProtocol.Client....");
+            System.out.print("Write the connection port with the server: ");
+
+            this.port = sc.nextInt();
+
+            // creates a socket on the client-side
+            this.socket = new Socket(SERVER, port);
+
+            // connects io streams
+            this.writer = new PrintWriter(socket.getOutputStream(), true);
+            this.reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(-1);
+        }
+
+        // creates a stream to read what the client writes
+        BufferedReader stdInd = new BufferedReader(new InputStreamReader(System.in));
+
+        // executes the protocol on the client-side
+        ClientProtocol.process(stdInd, reader, writer);
+
+        // closes streams and socket
+        stdInd.close();
+        writer.close();
+        reader.close();
+        socket.close();
+    }
+
     //===================================================
     // Methods
     //===================================================
@@ -73,39 +125,8 @@ public class Client {
             throws IOException, NoSuchAlgorithmException, OperatorCreationException,
             CertificateException {
 
-        Scanner sc = new Scanner(System.in);
-        Socket socket = null;
-        PrintWriter writer = null;
-        BufferedReader reader = null;
-        int port;
+        Client client = new Client();
 
-        System.out.println("CommunicationProtocol.Client....");
-        System.out.print("Write the connection port with the server: ");
-        port = sc.nextInt();
-
-        try {
-            // creates a socket on the client-side
-            socket = new Socket(SERVER, port);
-
-            // connects io streams
-            writer = new PrintWriter(socket.getOutputStream(), true);
-            reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(-1);
-        }
-
-        // creates a stream to read what the client writes
-        BufferedReader stdInd = new BufferedReader(new InputStreamReader(System.in));
-
-        // executes the protocol on the client-side
-        ClientProtocol.process(stdInd, reader, writer);
-
-        // closes streams and socket
-        stdInd.close();
-        writer.close();
-        reader.close();
-        socket.close();
 
     }
 }
