@@ -515,10 +515,10 @@ public class ClientProtocol {
      */
     private static void sendIdToServer() throws IOException {
         System.out.println("\n========== SENDING AGENT ID TO SERVER ==========");
-        System.out.println("Please enter your agent ID: ");
-        String input = inputFromUser.readLine();
+        //System.out.println("Please enter your agent ID: ");
+        //String input = inputFromUser.readLine();
 
-        byte[] cypheredAgentId = Symmetric.encrypt(symmetricServerClientKey, input);
+        byte[] cypheredAgentId = Symmetric.encrypt(symmetricServerClientKey, "1234");
 
         String cypheredAgentIdString = DatatypeConverter.printBase64Binary(cypheredAgentId);
         outputFromClient.println(cypheredAgentIdString);

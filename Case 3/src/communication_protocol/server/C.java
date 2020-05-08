@@ -31,8 +31,8 @@ public class C {
 		System.out.println(MAESTRO + "Establish connection port:");
 		InputStreamReader isr = new InputStreamReader(System.in);
 		BufferedReader br = new BufferedReader(isr);
-		int ip = Integer.parseInt(br.readLine());
-		System.out.println(MAESTRO + "Starting master server on port " + ip);
+		//int ip = Integer.parseInt(br.readLine());
+		System.out.println(MAESTRO + "Starting master server on port " + 4545);
 
 		// Adiciona la libreria como un proveedor de seguridad.
 		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
@@ -58,7 +58,7 @@ public class C {
         D.init(certSer, keyPairServidor,file);
 
 		// Crea el socket que escucha en el puerto seleccionado.
-		ss = new ServerSocket(ip);
+		ss = new ServerSocket(4545);
 		System.out.println(MAESTRO + "Socket creado.");
 
 
@@ -66,7 +66,6 @@ public class C {
 
 		for (int i=0;true;i++) {
 			try {
-
 					Socket sc = ss.accept();
 					System.out.println(MAESTRO + "Client " + i + " was accepted.");
 					D d = new D(sc,i);

@@ -78,12 +78,12 @@ public class Client {
             this.sc = new Scanner(System.in);
 
             System.out.println("CommunicationProtocol.Client....");
-            System.out.print("Write the connection port with the server: ");
+            //System.out.print("Write the connection port with the server: ");
 
-            this.port = sc.nextInt();
+            //this.port = sc.nextInt();
 
             // creates a socket on the client-side
-            this.socket = new Socket(SERVER, port);
+            this.socket = new Socket(SERVER, 4545);
 
             // connects io streams
             this.writer = new PrintWriter(socket.getOutputStream(), true);
