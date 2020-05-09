@@ -26,6 +26,7 @@ SOFTWARE.
 //===================================================
 
 import java.io.*;
+import java.lang.management.ManagementFactory;
 import java.math.BigInteger;
 import java.net.Socket;
 import java.security.*;
@@ -51,6 +52,10 @@ import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import javax.management.Attribute;
+import javax.management.AttributeList;
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
 import javax.xml.bind.DatatypeConverter;
 
 /**
@@ -122,15 +127,7 @@ public class Client {
      * Ciphers.Symmetric private key between server and client
      */
     private static SecretKey symmetricServerClientKey;
-    /**
-     * The start time of the transaction.
-     */
-    private long startTime;
 
-    /**
-     * The end time of the transaction.
-     */
-    private long endTime;
 
     private Scanner sc;
     private Socket socket;
@@ -224,8 +221,6 @@ public class Client {
         // generate client-side certificate
         X509Certificate clientCertificate = generateCertificate(keypair);
 
-        startTime = System.currentTimeMillis();
-
         // send certificate to the server
         sendCertificate(clientCertificate);
 
@@ -286,29 +281,8 @@ public class Client {
         // respond to the server after receiving hour
         respondToFinalServerRequest();
 
-        endTime = System.currentTimeMillis();
-
-        escribirMensaje(Long.toString(endTime-startTime));
     }
 
-    /*
-     * Generacion del archivo log.
-     * Nota:
-     * - Debe conservar el metodo .
-     * - Es el Ãºnico metodo permitido para escribir en el log.
-     */
-    private synchronized void escribirMensaje(String pCadena) {
-
-        try {
-            File timeFile = new File("./times.txt");
-            FileWriter fw = new FileWriter(timeFile,true);
-            fw.write(pCadena + "\n");
-            fw.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
     /**
      * Sends the synchronize message to the server.
      */
@@ -417,7 +391,7 @@ public class Client {
      *
      * @param pCertificate the client's X509 certificate
      * @throws java.security.cert.CertificateEncodingException when there is an error with the
-     * certificate.
+     *                                                         certificate.
      */
     public void sendCertificate(X509Certificate pCertificate) throws CertificateEncodingException {
         System.out.println("\n========== SENDING CLIENT CERTIFICATE TO SERVER ==========");
@@ -558,7 +532,7 @@ public class Client {
      */
     private void sendIdToServer() throws IOException {
         System.out.println("\n========== SENDING AGENT ID TO SERVER ==========");
-        int id = (int) Math.floor(Math.random()*(9999-1000+1)+1000);
+        int id = (int) Math.floor(Math.random() * (9999 - 1000 + 1) + 1000);
 
         byte[] cypheredAgentId = Symmetric.encrypt(symmetricServerClientKey, Integer.toString(id));
 

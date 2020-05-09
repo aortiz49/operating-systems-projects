@@ -1,10 +1,15 @@
 package communication_protocol.server;
 
+import javax.management.Attribute;
+import javax.management.AttributeList;
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.management.ManagementFactory;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.security.KeyPair;
@@ -27,7 +32,6 @@ public class C {
     public static void main(String[] args) throws Exception {
 
 
-
         System.out.println(MAESTRO + "Establish connection port:");
         InputStreamReader isr = new InputStreamReader(System.in);
         BufferedReader br = new BufferedReader(isr);
@@ -48,10 +52,14 @@ public class C {
         // Crea el archivo de tiempos
         File timeFile = null;
 
+        // Crea el archivo de cpu
+        File cpuFile = null;
+
         keyPairServidor = S.grsa();
         certSer = S.gc(keyPairServidor);
         String ruta = "./resultados.txt";
         String times = "./times.txt";
+        String cpu = "./cpu.txt";
 
         logFile = new File(ruta);
         if (!logFile.exists()) {
@@ -68,13 +76,20 @@ public class C {
 
         fw.close();
 
+        cpuFile = new File(cpu);
+        if (!cpuFile.exists()) {
+            cpuFile.createNewFile();
+        }
+        fw = new FileWriter(cpuFile);
+        fw.close();
 
 
 
 
 
 
-        D.init(certSer, keyPairServidor, logFile);
+
+        D.init(certSer, keyPairServidor, logFile,timeFile,cpuFile);
 
         // Crea el socket que escucha en el puerto seleccionado.
         ss = new ServerSocket(5454);
@@ -88,11 +103,33 @@ public class C {
 
                 D d = new D(sc, i);
                 threadpool.execute(d);
+                System.out.println("############################################"+getSystemCpuLoad());
 
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 System.out.println(MAESTRO + "Error creating client socket.");
                 e.printStackTrace();
             }
         }
+
+    }
+    public static double getSystemCpuLoad() throws Exception {
+
+        MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+        ObjectName name = ObjectName.getInstance("java.lang:type=OperatingSystem");
+        AttributeList list = mbs.getAttributes(name, new String[]{"SystemCpuLoad"});
+
+        if (list.isEmpty()) {
+            return Double.NaN;
+        }
+
+        Attribute att = (Attribute) list.get(0);
+        Double value = (Double) att.getValue();
+
+        // usually takes a couple of seconds before we get real values
+        if (value == -1.0)
+            return Double.NaN; // returns a percentage value with 1 decimal point precision
+        return ((int) (value * 1000) / 10.0);
+
     }
 }
