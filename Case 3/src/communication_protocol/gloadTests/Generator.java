@@ -32,7 +32,7 @@ public class Generator {
      */
     public Generator() {
         Task work = createTask();
-        int numberOfTasks = 800;
+        int numberOfTasks = 100;
         int gapBetweenTasks = 20; // 1000ms between tasks
         generator = new LoadGenerator("Client - Server Load Test", numberOfTasks, work,
                                       gapBetweenTasks);

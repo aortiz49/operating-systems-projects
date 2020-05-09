@@ -525,10 +525,9 @@ public class Client {
      */
     private void sendIdToServer() throws IOException {
         System.out.println("\n========== SENDING AGENT ID TO SERVER ==========");
-        //System.out.println("Please enter your agent ID: ");
-        //String input = inputFromUser.readLine();
+        int id = (int) Math.floor(Math.random()*(9999-1000+1)+1000);
 
-        byte[] cypheredAgentId = Symmetric.encrypt(symmetricServerClientKey, "1234");
+        byte[] cypheredAgentId = Symmetric.encrypt(symmetricServerClientKey, Integer.toString(id));
 
         String cypheredAgentIdString = DatatypeConverter.printBase64Binary(cypheredAgentId);
         writer.println(cypheredAgentIdString);
