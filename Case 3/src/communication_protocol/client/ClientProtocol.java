@@ -137,7 +137,7 @@ public class ClientProtocol {
      */
     public static void process(BufferedReader stdIn, BufferedReader pIn, PrintWriter pOut)
             throws IOException, NoSuchAlgorithmException, CertificateException,
-            OperatorCreationException {
+            OperatorCreationException, InterruptedException {
 
         // assign the input from the user
         inputFromUser = stdIn;
@@ -268,7 +268,7 @@ public class ClientProtocol {
     /**
      * Sends the synchronize message to the server.
      */
-    private static void SYN() {
+    private static void SYN() throws InterruptedException {
         // send HELLO to the server
         System.out.println("\n========== SYN ==========");
         System.out.println("Message to server: " + HELLO);

@@ -13,7 +13,8 @@ public class ClientServerTask extends Task {
     public void execute() {
         try {
             Client client = new Client();
-        } catch (IOException | NoSuchAlgorithmException | OperatorCreationException | CertificateException e) {
+            client.process();
+        } catch (IOException | NoSuchAlgorithmException | OperatorCreationException | CertificateException | InterruptedException e) {
             e.printStackTrace();
         }
 

@@ -39,7 +39,6 @@ public class D extends Thread {
 	private static File file;
 	public static final int numCadenas = 13;
 
-
 	public static void init(X509Certificate pCertSer, KeyPair pKeyPairServidor, File pFile) {
 		certSer = pCertSer;
 		keyPairServidor = pKeyPairServidor;
