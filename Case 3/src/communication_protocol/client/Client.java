@@ -122,6 +122,15 @@ public class Client {
      * Ciphers.Symmetric private key between server and client
      */
     private static SecretKey symmetricServerClientKey;
+    /**
+     * The start time of the transaction.
+     */
+    private long startTime;
+
+    /**
+     * The end time of the transaction.
+     */
+    private long endTime;
 
     private Scanner sc;
     private Socket socket;
@@ -215,6 +224,8 @@ public class Client {
         // generate client-side certificate
         X509Certificate clientCertificate = generateCertificate(keypair);
 
+        startTime = System.currentTimeMillis();
+
         // send certificate to the server
         sendCertificate(clientCertificate);
 
@@ -274,8 +285,30 @@ public class Client {
 
         // respond to the server after receiving hour
         respondToFinalServerRequest();
+
+        endTime = System.currentTimeMillis();
+
+        escribirMensaje(Long.toString(endTime-startTime));
     }
 
+    /*
+     * Generacion del archivo log.
+     * Nota:
+     * - Debe conservar el metodo .
+     * - Es el Ãºnico metodo permitido para escribir en el log.
+     */
+    private synchronized void escribirMensaje(String pCadena) {
+
+        try {
+            File timeFile = new File("./times.txt");
+            FileWriter fw = new FileWriter(timeFile,true);
+            fw.write(pCadena + "\n");
+            fw.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
     /**
      * Sends the synchronize message to the server.
      */

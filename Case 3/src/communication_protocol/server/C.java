@@ -43,19 +43,38 @@ public class C {
         System.out.println("Thread pool created with size: " + poolsize);
 
         // Crea el archivo de log
-        File file = null;
+        File logFile = null;
+
+        // Crea el archivo de tiempos
+        File timeFile = null;
+
         keyPairServidor = S.grsa();
         certSer = S.gc(keyPairServidor);
         String ruta = "./resultados.txt";
+        String times = "./times.txt";
 
-        file = new File(ruta);
-        if (!file.exists()) {
-            file.createNewFile();
+        logFile = new File(ruta);
+        if (!logFile.exists()) {
+            logFile.createNewFile();
         }
-        FileWriter fw = new FileWriter(file);
+        FileWriter fw = new FileWriter(logFile);
         fw.close();
 
-        D.init(certSer, keyPairServidor, file);
+        timeFile = new File(times);
+        if (!timeFile.exists()) {
+            timeFile.createNewFile();
+        }
+        fw = new FileWriter(timeFile);
+
+        fw.close();
+
+
+
+
+
+
+
+        D.init(certSer, keyPairServidor, logFile);
 
         // Crea el socket que escucha en el puerto seleccionado.
         ss = new ServerSocket(5454);

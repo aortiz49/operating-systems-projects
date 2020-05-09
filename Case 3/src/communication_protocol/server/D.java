@@ -36,13 +36,13 @@ public class D extends Thread {
 	private byte[] mybyte;
 	private static X509Certificate certSer;
 	private static KeyPair keyPairServidor;
-	private static File file;
+	private static File logFile;
 	public static final int numCadenas = 13;
 
 	public static void init(X509Certificate pCertSer, KeyPair pKeyPairServidor, File pFile) {
 		certSer = pCertSer;
 		keyPairServidor = pKeyPairServidor;
-		file = pFile;
+		logFile = pFile;
 	}
 
 	public D (Socket csP, int idP) {
@@ -75,7 +75,7 @@ public class D extends Thread {
 	private synchronized void escribirMensaje(String pCadena) {
 
 		try {
-			FileWriter fw = new FileWriter(file,true);
+			FileWriter fw = new FileWriter(logFile,true);
 			fw.write(pCadena + "\n");
 			fw.close();
 		} catch (Exception e) {
