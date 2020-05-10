@@ -4,11 +4,7 @@ import javax.management.Attribute;
 import javax.management.AttributeList;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.lang.management.ManagementFactory;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -106,21 +102,30 @@ public class C {
             }
         }
 
-        awaitTerminationAfterShutdown(threadpool);
-
+        awaitTerminationAfterShutdown(threadpool, transactions);
     }
 
-    public static void awaitTerminationAfterShutdown(ExecutorService threadpool) {
+    public static void awaitTerminationAfterShutdown(ExecutorService threadpool, int transactions)
+            throws IOException {
         threadpool.shutdown();
         if (!threadpool.isTerminated()) {
             try {
                 threadpool.awaitTermination(100000000, TimeUnit.SECONDS);
+
             } catch (InterruptedException e) {
                 System.out.println("Error");
             }
         }
         System.out.println("Clients have stopped");
         cpuMonitor.interrupt();
+
+        BufferedReader reader = new BufferedReader(new FileReader("times.txt"));
+        int lines = 0;
+        while (reader.readLine() != null) lines++;
+        reader.close();
+
+        System.out.println("Lost: "+ (transactions-lines));
+
     }
 
 }
