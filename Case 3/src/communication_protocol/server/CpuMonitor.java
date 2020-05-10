@@ -29,12 +29,12 @@ public class CpuMonitor extends Thread {
 
     public CpuMonitor() throws IOException {
 
-      /*  cpuFile = new File("./cpu.txt");
+        cpuFile = new File("./cpu.txt");
         if (!cpuFile.exists()) {
             cpuFile.createNewFile();
         }
         FileWriter  fw = new FileWriter(cpuFile);
-        fw.close();*/
+        fw.close();
     }
 
     /**
@@ -43,13 +43,26 @@ public class CpuMonitor extends Thread {
     public void run() {
         while(!Thread.interrupted()) {
             try {
-                Thread.sleep(200);
-                System.out.println("############## -> " + getSystemCpuLoad());
+                Thread.sleep(50);
+                logCpu(Double.toString(getSystemCpuLoad()));
+
             } catch (Exception e) {
                 Thread.currentThread().interrupt();
                 e.getMessage();
             }
         }
+    }
+
+    private synchronized void logCpu(String pString) {
+
+        try {
+            FileWriter fw = new FileWriter(cpuFile, true);
+            fw.write(pString + "\n");
+            fw.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**

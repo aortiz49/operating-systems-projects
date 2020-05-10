@@ -34,9 +34,8 @@ public class Generator {
      */
     public Generator(int pNumTasks) {
         Task work = createTask();
-        int numberOfTasks = pNumTasks;
         int gapBetweenTasks = 40; // 1000ms between tasks
-        generator = new LoadGenerator("Client - Server Load Test", numberOfTasks, work,
+        generator = new LoadGenerator("Client - Server Load Test", pNumTasks, work,
                                       gapBetweenTasks);
         generator.generate();
     }

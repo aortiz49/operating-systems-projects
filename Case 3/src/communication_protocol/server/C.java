@@ -23,6 +23,7 @@ public class C {
     private static final String MAESTRO = "MASTER: ";
     private static X509Certificate certSer; /* acceso default */
     private static KeyPair keyPairServidor; /* acceso default */
+    private static CpuMonitor cpuMonitor;
 
     /**
      * @param args
@@ -80,7 +81,7 @@ public class C {
         ss = new ServerSocket(5454);
         System.out.println(MAESTRO + "Socket creado.");
 
-        CpuMonitor cpuMonitor = new CpuMonitor();
+        cpuMonitor = new CpuMonitor();
 
         System.out.println("Enter the number of transactions to perform: ");
         int transactions = Integer.parseInt(br.readLine());
@@ -98,12 +99,18 @@ public class C {
                 D d = new D(sc, i);
                 threadpool.execute(d);
 
+
             } catch (IOException e) {
                 System.out.println(MAESTRO + "Error creating client socket.");
                 e.printStackTrace();
             }
         }
 
+        awaitTerminationAfterShutdown(threadpool);
+
+    }
+
+    public static void awaitTerminationAfterShutdown(ExecutorService threadpool) {
         threadpool.shutdown();
         if (!threadpool.isTerminated()) {
             try {
@@ -113,26 +120,7 @@ public class C {
             }
         }
         System.out.println("Clients have stopped");
-        cpuMonitor.interrupt();args
-    }
-
-
-
-
-
-    public static void awaitTerminationAfterShutdown(ExecutorService threadPool) {
-        threadPool.shutdown();
-        System.out.println("All tasks have ended.");
-
-        try {
-            if (!threadPool.awaitTermination(6000000, TimeUnit.SECONDS)) {
-                threadPool.shutdownNow();
-            }
-
-        } catch (InterruptedException ex) {
-            threadPool.shutdownNow();
-            Thread.currentThread().interrupt();
-        }
+        cpuMonitor.interrupt();
     }
 
 }
