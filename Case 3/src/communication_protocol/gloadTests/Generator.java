@@ -32,11 +32,9 @@ public class Generator {
     /**
      * Constructs a new generator with a specified load.
      */
-    public Generator(int pNumTasks) {
+    public Generator(int pNumTasks, int pDelay) {
         Task work = createTask();
-        int gapBetweenTasks = 40; // 1000ms between tasks
-        generator = new LoadGenerator("Client - Server Load Test", pNumTasks, work,
-                                      gapBetweenTasks);
+        generator = new LoadGenerator("Client - Server Load Test", pNumTasks, work, pDelay);
         generator.generate();
     }
 
@@ -53,6 +51,8 @@ public class Generator {
         Scanner in = new Scanner(System.in);
         System.out.println("Enter the number of tasks: ");
         int numTasks = in.nextInt();
-        Generator gen = new Generator(numTasks);
+        System.out.println("Enter the delay between tasks (ms): ");
+        int delay = in.nextInt();
+        Generator gen = new Generator(numTasks,delay);
     }
 }

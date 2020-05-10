@@ -43,7 +43,7 @@ public class CpuMonitor extends Thread {
     public void run() {
         while(!Thread.interrupted()) {
             try {
-                Thread.sleep(50);
+                Thread.sleep(100);
                 logCpu(Double.toString(getSystemCpuLoad()));
 
             } catch (Exception e) {
