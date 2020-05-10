@@ -15,9 +15,7 @@ import java.net.Socket;
 import java.security.KeyPair;
 import java.security.Security;
 import java.security.cert.X509Certificate;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.*;
 
 
 public class C {
@@ -43,7 +41,7 @@ public class C {
 
         System.out.println("Enter thread pool size:");
         int poolsize = Integer.parseInt(br.readLine());
-        Executor threadpool = Executors.newFixedThreadPool(poolsize);
+        ExecutorService threadpool = Executors.newFixedThreadPool(poolsize);
         System.out.println("Thread pool created with size: " + poolsize);
 
         // Crea el archivo de log
@@ -76,41 +74,65 @@ public class C {
 
         fw.close();
 
-        cpuFile = new File(cpu);
-        if (!cpuFile.exists()) {
-            cpuFile.createNewFile();
-        }
-        fw = new FileWriter(cpuFile);
-        fw.close();
-
-
-
-
-
-
-
-        D.init(certSer, keyPairServidor, logFile,timeFile,cpuFile);
+        D.init(certSer, keyPairServidor, logFile, timeFile);
 
         // Crea el socket que escucha en el puerto seleccionado.
         ss = new ServerSocket(5454);
         System.out.println(MAESTRO + "Socket creado.");
 
+        CpuMonitor cpuMonitor = new CpuMonitor();
 
-        for (int i = 0; true; i++) {
+        System.out.println("Enter the number of transactions to perform: ");
+        int transactions = Integer.parseInt(br.readLine());
+
+        for (int i = 0; i < transactions; i++) {
             try {
+
                 Socket sc = ss.accept();
+                if (i == 0) {
+                    cpuMonitor.start();
+                }
+
                 System.out.println(MAESTRO + "Client " + i + " was accepted.");
 
                 D d = new D(sc, i);
                 threadpool.execute(d);
 
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 System.out.println(MAESTRO + "Error creating client socket.");
                 e.printStackTrace();
             }
         }
 
+        threadpool.shutdown();
+        if (!threadpool.isTerminated()) {
+            try {
+                threadpool.awaitTermination(100000000, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                System.out.println("Error");
+            }
+        }
+        System.out.println("Clients have stopped");
+        cpuMonitor.interrupt();args
+    }
+
+
+
+
+
+    public static void awaitTerminationAfterShutdown(ExecutorService threadPool) {
+        threadPool.shutdown();
+        System.out.println("All tasks have ended.");
+
+        try {
+            if (!threadPool.awaitTermination(6000000, TimeUnit.SECONDS)) {
+                threadPool.shutdownNow();
+            }
+
+        } catch (InterruptedException ex) {
+            threadPool.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
     }
 
 }

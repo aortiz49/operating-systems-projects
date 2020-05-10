@@ -7,6 +7,8 @@ package communication_protocol.gloadTests;
 import uniandes.gload.core.LoadGenerator;
 import uniandes.gload.core.Task;
 
+import java.util.Scanner;
+
 /**
  * GLoad Core Class - Task
  *
@@ -30,9 +32,9 @@ public class Generator {
     /**
      * Constructs a new generator with a specified load.
      */
-    public Generator() {
+    public Generator(int pNumTasks) {
         Task work = createTask();
-        int numberOfTasks = 200;
+        int numberOfTasks = pNumTasks;
         int gapBetweenTasks = 40; // 1000ms between tasks
         generator = new LoadGenerator("Client - Server Load Test", numberOfTasks, work,
                                       gapBetweenTasks);
@@ -49,6 +51,9 @@ public class Generator {
     }
 
     public static void main(String... args) {
-        Generator gen = new Generator();
+        Scanner in = new Scanner(System.in);
+        System.out.println("Enter the number of tasks: ");
+        int numTasks = in.nextInt();
+        Generator gen = new Generator(numTasks);
     }
 }

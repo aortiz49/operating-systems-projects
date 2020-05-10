@@ -58,12 +58,11 @@ public class D extends Thread {
     private long endTime;
 
     public static void init(X509Certificate pCertSer, KeyPair pKeyPairServidor, File pFile,
-                            File pTimeFile, File pCpuFile) {
+                            File pTimeFile) {
         certSer = pCertSer;
         keyPairServidor = pKeyPairServidor;
         logFile = pFile;
         timeFile = pTimeFile;
-        cpuFile = pCpuFile;
     }
 
     public D(Socket csP, int idP) {
@@ -115,24 +114,12 @@ public class D extends Thread {
 
     }
 
-    private synchronized void logCpu(String pCadena) {
 
-        if(Double.parseDouble(pCadena)!=0.0) {
-            try {
-                FileWriter fw = new FileWriter(cpuFile, true);
-                fw.write(pCadena + "\n");
-                fw.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
     public void run() {
         String[] cadenas;
         cadenas = new String[numCadenas];
 
-        double cpuUsage = 0;
         String feedback;
         String linea;
         System.out.println(dlg + "Empezando atencion.");
@@ -226,10 +213,6 @@ public class D extends Thread {
             System.out.println(cadenas[7]);
 
 
-            System.out.println("############################" + getSystemCpuLoad());
-
-
-
             /***** Fase 5: Envia reto *****/
             Random rand = new Random();
             int intReto = rand.nextInt(999);
@@ -301,7 +284,6 @@ public class D extends Thread {
                 escribirMensaje(cadenas[i]);
             }
             logTime(Long.toString(endTime - startTime));
-            logCpu(Double.toString(getSystemCpuLoad()));
 
 
 
@@ -312,27 +294,6 @@ public class D extends Thread {
 
     public static String toHexString(byte[] array) {
         return DatatypeConverter.printBase64Binary(array);
-    }
-
-
-    public double getSystemCpuLoad() throws Exception {
-
-        MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-        ObjectName name = ObjectName.getInstance("java.lang:type=OperatingSystem");
-        AttributeList list = mbs.getAttributes(name, new String[]{"SystemCpuLoad"});
-
-        if (list.isEmpty()) {
-            return Double.NaN;
-        }
-
-        Attribute att = (Attribute) list.get(0);
-        Double value = (Double) att.getValue();
-
-        // usually takes a couple of seconds before we get real values
-        if (value == -1.0)
-            return Double.NaN; // returns a percentage value with 1 decimal point precision
-        return ((int) (value * 100000) / 1000.0);
-
     }
 
     public static byte[] toByteArray(String s) {
