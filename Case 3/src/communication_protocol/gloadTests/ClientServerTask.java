@@ -1,6 +1,7 @@
 package communication_protocol.gloadTests;
 
 import communication_protocol.client.Client;
+import communication_protocol.client.Client_NoSecurity;
 import org.bouncycastle.operator.OperatorCreationException;
 import uniandes.gload.core.Task;
 
@@ -12,7 +13,8 @@ public class ClientServerTask extends Task {
     @Override
     public void execute() {
         try {
-            Client client = new Client();
+           // Client client = new Client();
+            Client_NoSecurity client = new Client_NoSecurity();
             client.process();
         } catch (IOException | NoSuchAlgorithmException | OperatorCreationException | CertificateException | InterruptedException e) {
             e.printStackTrace();

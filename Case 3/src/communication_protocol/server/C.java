@@ -72,6 +72,8 @@ public class C {
         fw.close();
 
         D.init(certSer, keyPairServidor, logFile, timeFile);
+        D_NoSecurity.init(certSer, keyPairServidor, logFile, timeFile);
+
 
         // Crea el socket que escucha en el puerto seleccionado.
         ss = new ServerSocket(5454);
@@ -92,7 +94,8 @@ public class C {
 
                 System.out.println(MAESTRO + "Client " + i + " was accepted.");
 
-                D d = new D(sc, i);
+                //D d = new D(sc, i);
+                D_NoSecurity d = new D_NoSecurity(sc,i);
                 threadpool.execute(d);
 
 
