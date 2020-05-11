@@ -110,7 +110,7 @@ public class C {
         threadpool.shutdown();
         if (!threadpool.isTerminated()) {
             try {
-                threadpool.awaitTermination(100000000, TimeUnit.SECONDS);
+                threadpool.awaitTermination(10, TimeUnit.SECONDS);
 
             } catch (InterruptedException e) {
                 System.out.println("Error");
@@ -119,12 +119,14 @@ public class C {
         System.out.println("Clients have stopped");
         cpuMonitor.interrupt();
 
+
         BufferedReader reader = new BufferedReader(new FileReader("times.txt"));
         int lines = 0;
         while (reader.readLine() != null) lines++;
         reader.close();
 
         System.out.println("Lost: "+ (transactions-lines));
+        System.exit(0);
 
     }
 
