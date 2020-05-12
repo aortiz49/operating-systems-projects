@@ -31,7 +31,7 @@ public class C {
         InputStreamReader isr = new InputStreamReader(System.in);
         BufferedReader br = new BufferedReader(isr);
         //int ip = Integer.parseInt(br.readLine());
-        System.out.println(MAESTRO + "Starting master server on port " + 5454);
+        System.out.println(MAESTRO + "Starting master server on port " + 3400);
 
         // Adiciona la libreria como un proveedor de seguridad.
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
@@ -76,7 +76,7 @@ public class C {
 
 
         // Crea el socket que escucha en el puerto seleccionado.
-        ss = new ServerSocket(5454);
+        ss = new ServerSocket(3400);
         System.out.println(MAESTRO + "Socket creado.");
 
         cpuMonitor = new CpuMonitor();
@@ -94,8 +94,8 @@ public class C {
 
                 System.out.println(MAESTRO + "Client " + i + " was accepted.");
 
-                //D d = new D(sc, i);
-                D_NoSecurity d = new D_NoSecurity(sc,i);
+                D d = new D(sc, i);
+                //D_NoSecurity d = new D_NoSecurity(sc,i);
                 threadpool.execute(d);
 
 
@@ -111,14 +111,12 @@ public class C {
     public static void awaitTerminationAfterShutdown(ExecutorService threadpool, int transactions)
             throws IOException {
         threadpool.shutdown();
-        if (!threadpool.isTerminated()) {
-            try {
-                threadpool.awaitTermination(10, TimeUnit.SECONDS);
-
-            } catch (InterruptedException e) {
-                System.out.println("Error");
-            }
-        }
+        //if (!threadpool.isTerminated()) {
+            //threadpool.awaitTermination(200, TimeUnit.SECONDS);
+			while (!threadpool.isTerminated()) {
+				//Thread.sleep(1000);
+			}
+        //}
         System.out.println("Clients have stopped");
         cpuMonitor.interrupt();
 

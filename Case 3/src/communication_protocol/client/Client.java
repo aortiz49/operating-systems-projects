@@ -143,7 +143,7 @@ public class Client {
         try {
 
             // creates a socket on the client-side
-            this.socket = new Socket(SERVER, 5454);
+            this.socket = new Socket(SERVER, 3400);
 
             // connects io streams
             this.writer = new PrintWriter(socket.getOutputStream(), true);

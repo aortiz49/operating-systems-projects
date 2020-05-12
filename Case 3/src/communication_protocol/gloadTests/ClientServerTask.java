@@ -13,8 +13,8 @@ public class ClientServerTask extends Task {
     @Override
     public void execute() {
         try {
-           // Client client = new Client();
-            Client_NoSecurity client = new Client_NoSecurity();
+            Client client = new Client();
+            //Client_NoSecurity client = new Client_NoSecurity();
             client.process();
         } catch (IOException | NoSuchAlgorithmException | OperatorCreationException | CertificateException | InterruptedException e) {
             e.printStackTrace();

@@ -58,6 +58,7 @@ public class CpuMonitor extends Thread {
         try {
             FileWriter fw = new FileWriter(cpuFile, true);
             fw.write(pString + "\n");
+            System.out.println(pString);
             fw.close();
         } catch (Exception e) {
             e.printStackTrace();
