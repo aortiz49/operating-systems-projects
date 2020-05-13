@@ -100,7 +100,6 @@ public class CpuMonitor extends Thread {
 
     }
 
-
     public synchronized boolean tasksRemaining() {
     	return getProcessedTasks() > 0;
     }
@@ -118,7 +117,7 @@ public class CpuMonitor extends Thread {
     }
 
     public void getLostTransactions() throws IOException {
-        System.out.println("Lost: "+ (C.transactions-processedTasks));
+        System.out.println("Lost Transactions: "+ (C.transactions-processedTasks));
         System.exit(0);
     }
 

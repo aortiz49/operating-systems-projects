@@ -6,6 +6,7 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import java.io.*;
 import java.lang.management.ManagementFactory;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.security.KeyPair;
@@ -28,12 +29,10 @@ public class C {
      */
     public static void main(String[] args) throws Exception {
 
-
-        System.out.println(MAESTRO + "Establish connection port:");
         InputStreamReader isr = new InputStreamReader(System.in);
         BufferedReader br = new BufferedReader(isr);
         //int ip = Integer.parseInt(br.readLine());
-        System.out.println(MAESTRO + "Starting master server on port " + 3400);
+        System.out.println(MAESTRO + "Starting master server on port " + 8080);
 
         // Adiciona la libreria como un proveedor de seguridad.
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
@@ -48,9 +47,6 @@ public class C {
 
         // Crea el archivo de tiempos
         File timeFile = null;
-
-        // Crea el archivo de cpu
-        File cpuFile = null;
 
         keyPairServidor = S.grsa();
         certSer = S.gc(keyPairServidor);
@@ -78,12 +74,12 @@ public class C {
 
 
         // Crea el socket que escucha en el puerto seleccionado.
-        ss = new ServerSocket(3400);
+        ss = new ServerSocket(20000, 50, InetAddress.getByName("127.0.0.1"));
         System.out.println(MAESTRO + "Socket creado.");
 
         System.out.println("Enter the number of transactions to perform: ");
         transactions = Integer.parseInt(br.readLine());
-        
+
         cpuMonitor = new CpuMonitor(transactions);
 
         for (int i = 0; i < transactions; i++) {

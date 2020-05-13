@@ -106,7 +106,7 @@ public class Client {
     /**
      * The server hosting the client.
      */
-    public final String SERVER = "localhost";
+    public final String SERVER = "181.53.12.165";
 
     /**
      * The buffer used for user input.
@@ -143,7 +143,7 @@ public class Client {
         try {
 
             // creates a socket on the client-side
-            this.socket = new Socket(SERVER, 3400);
+            this.socket = new Socket(SERVER, 20000);
 
             // connects io streams
             this.writer = new PrintWriter(socket.getOutputStream(), true);
