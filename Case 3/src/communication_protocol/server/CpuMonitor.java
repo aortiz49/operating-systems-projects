@@ -20,6 +20,7 @@ public class CpuMonitor extends Thread {
      */
     private static File cpuFile;
 
+    public static int tasksToProcess;
     public static int processedTasks;
 
 
@@ -29,7 +30,7 @@ public class CpuMonitor extends Thread {
 
     public CpuMonitor(int pT) throws IOException {
 
-    	processedTasks = pT;
+    	tasksToProcess = pT;
         cpuFile = new File("./cpu.txt");
         if (!cpuFile.exists()) {
             cpuFile.createNewFile();
@@ -53,13 +54,12 @@ public class CpuMonitor extends Thread {
             }
         }
         C.threadpool.shutdownNow();
-        /*try {
+        try {
         	getLostTransactions();
         }
         catch (Exception e) {
         	e.getStackTrace();
-        }*/
-        
+        }
     }
 
     private synchronized void logCpu(String pString) {
@@ -101,27 +101,25 @@ public class CpuMonitor extends Thread {
 
     }
 
-       
+
     public synchronized boolean tasksRemaining() {
-    	System.out.println("Processed tasks: " + processedTasks);
     	return getProcessedTasks() > 0;
     }
-    
-    private int getProcessedTasks() {
-    	return processedTasks;
-    }
-    
-    public static synchronized void decreaseCountCpu() {
-    	processedTasks--;
-    }
-    
-    public void getLostTransactions() throws IOException {
-    	BufferedReader reader = new BufferedReader(new FileReader("times.txt"));
-        int lines = 0;
-        while (reader.readLine() != null) lines++;
-        reader.close();
 
-        System.out.println("Lost: "+ (C.transactions-lines));
+    private int getProcessedTasks() {
+    	return tasksToProcess;
+    }
+
+    public static synchronized void decreaseCountCpu() {
+    	tasksToProcess--;
+    }
+
+    public static synchronized void increaseCountCpu() {
+        processedTasks++;
+    }
+
+    public void getLostTransactions() throws IOException {
+        System.out.println("Lost: "+ (C.transactions-processedTasks));
         System.exit(0);
     }
 
