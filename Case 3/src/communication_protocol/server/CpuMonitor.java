@@ -20,15 +20,16 @@ public class CpuMonitor extends Thread {
      */
     private static File cpuFile;
 
-
+    public static int processedTasks;
 
 
     //===================================================
     // Constructor
     //===================================================
 
-    public CpuMonitor() throws IOException {
+    public CpuMonitor(int pT) throws IOException {
 
+    	processedTasks = pT;
         cpuFile = new File("./cpu.txt");
         if (!cpuFile.exists()) {
             cpuFile.createNewFile();
@@ -41,16 +42,24 @@ public class CpuMonitor extends Thread {
      * The run method of the thread
      */
     public void run() {
-        while(!Thread.interrupted()) {
+        while(tasksRemaining()) {
             try {
                 Thread.sleep(100);
                 logCpu(Double.toString(getSystemCpuLoad()));
 
             } catch (Exception e) {
-                Thread.currentThread().interrupt();
+                //Thread.currentThread().interrupt();
                 e.getMessage();
             }
         }
+        C.threadpool.shutdownNow();
+        /*try {
+        	getLostTransactions();
+        }
+        catch (Exception e) {
+        	e.getStackTrace();
+        }*/
+        
     }
 
     private synchronized void logCpu(String pString) {
@@ -92,5 +101,28 @@ public class CpuMonitor extends Thread {
 
     }
 
+       
+    public synchronized boolean tasksRemaining() {
+    	System.out.println("Processed tasks: " + processedTasks);
+    	return getProcessedTasks() > 0;
+    }
+    
+    private int getProcessedTasks() {
+    	return processedTasks;
+    }
+    
+    public static synchronized void decreaseCountCpu() {
+    	processedTasks--;
+    }
+    
+    public void getLostTransactions() throws IOException {
+    	BufferedReader reader = new BufferedReader(new FileReader("times.txt"));
+        int lines = 0;
+        while (reader.readLine() != null) lines++;
+        reader.close();
+
+        System.out.println("Lost: "+ (C.transactions-lines));
+        System.exit(0);
+    }
 
 }

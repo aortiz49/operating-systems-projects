@@ -20,6 +20,8 @@ public class C {
     private static X509Certificate certSer; /* acceso default */
     private static KeyPair keyPairServidor; /* acceso default */
     private static CpuMonitor cpuMonitor;
+    public static ExecutorService threadpool;
+    public static int transactions;
 
     /**
      * @param args
@@ -38,7 +40,7 @@ public class C {
 
         System.out.println("Enter thread pool size:");
         int poolsize = Integer.parseInt(br.readLine());
-        ExecutorService threadpool = Executors.newFixedThreadPool(poolsize);
+        threadpool = Executors.newFixedThreadPool(poolsize);
         System.out.println("Thread pool created with size: " + poolsize);
 
         // Crea el archivo de log
@@ -79,10 +81,10 @@ public class C {
         ss = new ServerSocket(3400);
         System.out.println(MAESTRO + "Socket creado.");
 
-        cpuMonitor = new CpuMonitor();
-
         System.out.println("Enter the number of transactions to perform: ");
-        int transactions = Integer.parseInt(br.readLine());
+        transactions = Integer.parseInt(br.readLine());
+        
+        cpuMonitor = new CpuMonitor(transactions);
 
         for (int i = 0; i < transactions; i++) {
             try {
@@ -102,10 +104,11 @@ public class C {
             } catch (IOException e) {
                 System.out.println(MAESTRO + "Error creating client socket.");
                 e.printStackTrace();
+                CpuMonitor.decreaseCountCpu();
             }
         }
 
-        awaitTerminationAfterShutdown(threadpool, transactions);
+        //awaitTerminationAfterShutdown(threadpool, transactions);
     }
 
     public static void awaitTerminationAfterShutdown(ExecutorService threadpool, int transactions)
@@ -121,13 +124,13 @@ public class C {
         cpuMonitor.interrupt();
 
 
-        BufferedReader reader = new BufferedReader(new FileReader("times.txt"));
+        /*BufferedReader reader = new BufferedReader(new FileReader("times.txt"));
         int lines = 0;
         while (reader.readLine() != null) lines++;
         reader.close();
 
         System.out.println("Lost: "+ (transactions-lines));
-        System.exit(0);
+        System.exit(0);*/
 
     }
 
