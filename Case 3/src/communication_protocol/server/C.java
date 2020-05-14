@@ -74,7 +74,7 @@ public class C {
 
 
         // Crea el socket que escucha en el puerto seleccionado.
-        ss = new ServerSocket(20000, 50, InetAddress.getByName("127.0.0.1"));
+        ss = new ServerSocket(80, 50, InetAddress.getByName("172.24.41.39"));
         System.out.println(MAESTRO + "Socket creado.");
 
         System.out.println("Enter the number of transactions to perform: ");

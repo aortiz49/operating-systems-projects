@@ -198,7 +198,6 @@ public class D extends Thread {
                 System.out.println(cadenas[4]);
             } catch (Exception e) {
                 CpuMonitor.decreaseCountCpu();
-
             }
 
             /***** Fase 4: Envia certificado del servidor *****/
@@ -310,8 +309,9 @@ public class D extends Thread {
             }
             logTime(Long.toString(endTime - startTime));
             CpuMonitor.increaseCountCpu();
-
             CpuMonitor.decreaseCountCpu();
+
+
 
         } catch (Exception e) {
             e.printStackTrace();

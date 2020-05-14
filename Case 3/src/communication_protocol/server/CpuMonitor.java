@@ -19,6 +19,8 @@ public class CpuMonitor extends Thread {
      * The file used to store the cpu data.
      */
     private static File cpuFile;
+    private static File lostFile;
+
 
     public static int tasksToProcess;
     public static int processedTasks;
@@ -36,6 +38,13 @@ public class CpuMonitor extends Thread {
             cpuFile.createNewFile();
         }
         FileWriter  fw = new FileWriter(cpuFile);
+        fw.close();
+
+        lostFile = new File("./lost.txt");
+        if (!lostFile.exists()) {
+            lostFile.createNewFile();
+        }
+        fw = new FileWriter(lostFile);
         fw.close();
     }
 
@@ -71,7 +80,17 @@ public class CpuMonitor extends Thread {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
+    private synchronized void logLost(String pString) {
+
+        try {
+            FileWriter fw = new FileWriter(lostFile, true);
+            fw.write(pString + "\n");
+            fw.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -118,6 +137,7 @@ public class CpuMonitor extends Thread {
 
     public void getLostTransactions() throws IOException {
         System.out.println("Lost Transactions: "+ (C.transactions-processedTasks));
+        logLost("Lost Transactions: "+ (C.transactions-processedTasks));
         System.exit(0);
     }
 

@@ -548,10 +548,10 @@ public class Client {
     private void decipherResponseToSeverIdRequest() throws IOException {
         String fromServer = reader.readLine();
         byte[] fromServerByte = DatatypeConverter.parseBase64Binary(fromServer);
+        if (fromServer != null) {
 
         byte[] decipheredResponse = Symmetric.decrypt(symmetricServerClientKey, fromServerByte);
 
-        if (fromServer != null) {
             System.out.println("\n========== RECEIVING SERVER RESPONSE TO ID ==========");
             System.out.println("Response from server to Id request: " + DatatypeConverter
                     .printBase64Binary(decipheredResponse));
