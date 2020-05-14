@@ -69,7 +69,7 @@ public class C {
 
         fw.close();
 
-        D.init(certSer, keyPairServidor, logFile, timeFile);
+        // D.init(certSer, keyPairServidor, logFile, timeFile);
         D_NoSecurity.init(certSer, keyPairServidor, logFile, timeFile);
 
 
@@ -92,8 +92,8 @@ public class C {
 
                 System.out.println(MAESTRO + "Client " + i + " was accepted.");
 
-                D d = new D(sc, i);
-                //D_NoSecurity d = new D_NoSecurity(sc,i);
+                //D d = new D(sc, i);
+                D_NoSecurity d = new D_NoSecurity(sc,i);
                 threadpool.execute(d);
 
 
@@ -111,10 +111,10 @@ public class C {
             throws IOException {
         threadpool.shutdown();
         //if (!threadpool.isTerminated()) {
-            //threadpool.awaitTermination(200, TimeUnit.SECONDS);
-			while (!threadpool.isTerminated()) {
-				//Thread.sleep(1000);
-			}
+        //threadpool.awaitTermination(200, TimeUnit.SECONDS);
+        while (!threadpool.isTerminated()) {
+            //Thread.sleep(1000);
+        }
         //}
         System.out.println("Clients have stopped");
         cpuMonitor.interrupt();

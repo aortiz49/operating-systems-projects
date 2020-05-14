@@ -132,6 +132,7 @@ public class D_NoSecurity extends Thread {
             if (!linea.equals(HOLA)) {
                 ac.println(ERROR);
                 sc.close();
+                CpuMonitor.decreaseCountCpu();
                 throw new Exception(dlg + ERROR + REC + linea + "-terminando.");
             }
             else {
@@ -145,6 +146,7 @@ public class D_NoSecurity extends Thread {
             if (!(linea.contains(SEPARADOR) && linea.split(SEPARADOR)[0].equals(ALGORITMOS))) {
                 ac.println(ERROR);
                 sc.close();
+                CpuMonitor.decreaseCountCpu();
                 throw new Exception(dlg + ERROR + REC + linea + "-terminando.");
             }
 
@@ -153,18 +155,21 @@ public class D_NoSecurity extends Thread {
                     .equals(S.BLOWFISH) && !algoritmos[1].equals(S.RC4)) {
                 ac.println(ERROR);
                 sc.close();
+                CpuMonitor.decreaseCountCpu();
                 throw new Exception(
                         dlg + ERROR + "Alg.Simetrico" + REC + algoritmos + "-terminando.");
             }
             if (!algoritmos[2].equals(S.RSA)) {
                 ac.println(ERROR);
                 sc.close();
+                CpuMonitor.decreaseCountCpu();
                 throw new Exception(
                         dlg + ERROR + "Alg.Asimetrico." + REC + algoritmos + "-terminando.");
             }
             if (!validoAlgHMAC(algoritmos[3])) {
                 ac.println(ERROR);
                 sc.close();
+                CpuMonitor.decreaseCountCpu();
                 throw new Exception(dlg + ERROR + "AlgHash." + REC + algoritmos + "-terminando.");
             }
             cadenas[1] = dlg + REC + linea + "-continuando.";
@@ -175,18 +180,23 @@ public class D_NoSecurity extends Thread {
 
 
             /***** Fase 3: Recibe certificado del cliente *****/
-            startTime = System.currentTimeMillis();
-            String strCertificadoCliente = dc.readLine();
-            byte[] certificadoClienteBytes = new byte[520];
-            certificadoClienteBytes = toByteArray(strCertificadoCliente);
-            CertificateFactory creador = CertificateFactory.getInstance("X.509");
-            InputStream in = new ByteArrayInputStream(certificadoClienteBytes);
-            X509Certificate certificadoCliente = (X509Certificate) creador.generateCertificate(in);
-            cadenas[3] = dlg + REC + "certificado del cliente. continuando.";
-            System.out.println(cadenas[3]);
-            ac.println(OK);
-            cadenas[4] = dlg + ENVIO + OK + "-continuando.";
-            System.out.println(cadenas[4]);
+            try {
+                startTime = System.currentTimeMillis();
+                String strCertificadoCliente = dc.readLine();
+                byte[] certificadoClienteBytes = new byte[520];
+                certificadoClienteBytes = toByteArray(strCertificadoCliente);
+                CertificateFactory creador = CertificateFactory.getInstance("X.509");
+                InputStream in = new ByteArrayInputStream(certificadoClienteBytes);
+                X509Certificate certificadoCliente = (X509Certificate) creador.generateCertificate(in);
+                cadenas[3] = dlg + REC + "certificado del cliente. continuando.";
+                System.out.println(cadenas[3]);
+                ac.println(OK);
+                cadenas[4] = dlg + ENVIO + OK + "-continuando.";
+                System.out.println(cadenas[4]);
+            }
+            catch (Exception e){
+                CpuMonitor.decreaseCountCpu();
+            }
 
             /***** Fase 4: Envia certificado del servidor *****/
             String strSerCert = toHexString(mybyte);
@@ -196,6 +206,7 @@ public class D_NoSecurity extends Thread {
             linea = dc.readLine();
             if (!linea.equals(OK)) {
                 sc.close();
+                CpuMonitor.decreaseCountCpu();
                 throw new Exception(dlg + ERROR + REC + linea + "-terminando.");
             }
             else {
@@ -204,47 +215,56 @@ public class D_NoSecurity extends Thread {
             }
 
             /***** Fase 5: Envia llave simetrica *****/
-            SecretKey simetrica = S.kgg(algoritmos[1]);
-            byte[] ciphertext1 = simetrica.getEncoded();
-            ac.println(toHexString(ciphertext1));
-            cadenas[7] = dlg + ENVIO + "llave K_SC al cliente. continuado.";
-            System.out.println(cadenas[7]);
+            try {
+                SecretKey simetrica = S.kgg(algoritmos[1]);
+                byte[] ciphertext1 = simetrica.getEncoded();
+                ac.println(toHexString(ciphertext1));
+                cadenas[7] = dlg + ENVIO + "llave K_SC al cliente. continuado.";
+                System.out.println(cadenas[7]);
 
 
-            /***** Fase 5: Envia reto *****/
-            Random rand = new Random();
-            int intReto = rand.nextInt(999);
-            String strReto = intReto + "";
-            while (strReto.length() % 4 != 0)
-                strReto += "0";
+                /***** Fase 5: Envia reto *****/
+                Random rand = new Random();
+                int intReto = rand.nextInt(999);
+                String strReto = intReto + "";
+                while (strReto.length() % 4 != 0)
+                    strReto += "0";
 
-            String reto = strReto;
-            byte[] bytereto = toByteArray(reto);
-            ac.println(toHexString(bytereto));
-            cadenas[8] = dlg + ENVIO + reto + "-reto al cliente. continuando ";
-            System.out.println(cadenas[8]);
+                String reto = strReto;
+                byte[] bytereto = toByteArray(reto);
+                ac.println(toHexString(bytereto));
+                cadenas[8] = dlg + ENVIO + reto + "-reto al cliente. continuando ";
+                System.out.println(cadenas[8]);
 
-            /***** Fase 6: Recibe reto del cliente *****/
-            linea = dc.readLine();
-            byte[] retodelcliente = toByteArray(linea);
-            String strdelcliente = toHexString(retodelcliente);
-            if (strdelcliente.equals(reto)) {
-                cadenas[9] = dlg + REC + strdelcliente + "-reto correcto. continuado.";
-                System.out.println(cadenas[9]);
-                ac.println("OK");
+                /***** Fase 6: Recibe reto del cliente *****/
+                linea = dc.readLine();
+                byte[] retodelcliente = toByteArray(linea);
+                String strdelcliente = toHexString(retodelcliente);
+                if (strdelcliente.equals(reto)) {
+                    cadenas[9] = dlg + REC + strdelcliente + "-reto correcto. continuado.";
+                    System.out.println(cadenas[9]);
+                    ac.println("OK");
+                } else {
+                    ac.println("ERROR");
+                    sc.close();
+                    throw new Exception(dlg + REC + strdelcliente + "-ERROR en reto. terminando");
+                }
             }
-            else {
-                ac.println("ERROR");
-                sc.close();
-                throw new Exception(dlg + REC + strdelcliente + "-ERROR en reto. terminando");
+            catch (Exception e){
+                CpuMonitor.decreaseCountCpu();
             }
 
             /***** Fase 7: Recibe identificador de usuario *****/
-            linea = dc.readLine();
-            byte[] retoByte = toByteArray(linea);
-            String nombre = toHexString(retoByte);
-            cadenas[10] = dlg + REC + nombre + "-continuando";
-            System.out.println(cadenas[10]);
+            try {
+                linea = dc.readLine();
+                byte[] retoByte = toByteArray(linea);
+                String nombre = toHexString(retoByte);
+                cadenas[10] = dlg + REC + nombre + "-continuando";
+                System.out.println(cadenas[10]);
+            }
+            catch (Exception e){
+                CpuMonitor.decreaseCountCpu();
+            }
 
             /***** Fase 8: Envia hora de registro *****/
             Calendar rightNow = Calendar.getInstance();
@@ -269,6 +289,7 @@ public class D_NoSecurity extends Thread {
                 System.out.println(cadenas[12]);
             }
             else {
+                CpuMonitor.decreaseCountCpu();
                 cadenas[12] = dlg + REC + linea + "-Terminando con error";
                 System.out.println(cadenas[12]);
             }
@@ -278,8 +299,8 @@ public class D_NoSecurity extends Thread {
                 escribirMensaje(cadenas[i]);
             }
             logTime(Long.toString(endTime - startTime));
-
-
+            CpuMonitor.decreaseCountCpu();
+            CpuMonitor.increaseCountCpu();
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -143,7 +143,7 @@ public class Client_NoSecurity {
         try {
 
             // creates a socket on the client-side
-            this.socket = new Socket(SERVER, 5454);
+            this.socket = new Socket("172.24.41.39", 80);
 
             // connects io streams
             this.writer = new PrintWriter(socket.getOutputStream(), true);
@@ -542,10 +542,11 @@ public class Client_NoSecurity {
      */
     private void decipherResponseToSeverIdRequest() throws IOException {
         String fromServer = reader.readLine();
-        byte[] fromServerByte = DatatypeConverter.parseBase64Binary(fromServer);
-
-
         if (fromServer != null) {
+
+            byte[] fromServerByte = DatatypeConverter.parseBase64Binary(fromServer);
+
+
             System.out.println("\n========== RECEIVING SERVER RESPONSE TO ID ==========");
             System.out.println("Response from server to Id request: " + DatatypeConverter
                     .printBase64Binary(fromServerByte));
