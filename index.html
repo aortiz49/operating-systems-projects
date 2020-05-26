@@ -19,56 +19,149 @@
 <!-- third party styles end -->
 
 </head>
-<body class="markdown-body vscode-body vscode-light" style="width: 60%;margin-left: auto;margin-right: auto;">
-<div class="content">
-    <a for="toc-anchor" id="file-systems%2C-performance-analysis%2C-and-capacity-planning"></a><h1 id="file-systems-performance-analysis-and-capacity-planning-2" data-line="0" class="code-line">File Systems, Performance Analysis, and Capacity Planning</h1>
+<body class="markdown-body vscode-body vscode-dark" style="width: 60%;margin-left: auto;margin-right: auto; background-color:#24292e !important; font-size: medium; color: #9da5b4 !important;"><div class="content">
+    <h1> <strong> File Systems, Performance Analysis, and Capacity Planning</strong> </h1>
 <p data-line="2" class="code-line">Andy Ortiz<br>
 ISIS 2203</p>
 <hr>
-<a for="toc-anchor" id="file-systems"></a><h2 id="file-systems-2" data-line="7" class="code-line">File Systems</h2>
+<a for="toc-anchor" id="**file-systems**"></a><h1 id="file-systems-4" data-line="7" class="code-line"><strong>File Systems</strong></h1>
 <p data-line="9" class="code-line">In this section, we will discuss the component of the operating system in charge of storing and fetching.</p>
 <div class="admonition info">
-<p class="admonition-title">Info</p>
 <p data-line="12" class="code-line">Keep in mind that file system operations take place whether a user is logged in or not and whether or not a process has finished executing or not.</p>
 </div>
-<a for="toc-anchor" id="_introduction_"></a><h3 id="introduction-2" data-line="14" class="code-line"><u>Introduction</u></h3>
-<p data-line="16" class="code-line">Hard disks are organized in concentric tracks which contain many sectors. The <strong>Master Boot Record</strong> is stored in track 0, in part of sector 0. The MBR stores information related to boot operations as well as a table specifying how the drive is partitioned. </p>
-<div class="admonition note">
-<p class="admonition-title">Test</p>
+<a for="toc-anchor" id="**introduction**"></a><h2 id="introduction-4" data-line="14" class="code-line"><strong>Introduction</strong></h2>
+<p data-line="16" class="code-line">Hard disks are organized in the following fashion.
+<p align="center">
+<img src="/img/disk.png">
+<figcaption style="text-align:center;">Fig. 1: Disk storage.</figcaption>
+</p></p>
+<p data-line="22" class="code-line">The <strong>Master Boot Record</strong> (MBR) is stored in track 0, in part of sector 0. The MBR stores information related to boot operations as well as a table specifying how the drive is partitioned.
+Each one of these partitions contains a <strong>Boot Block</strong> which contains information regarding how to boot the OS, an <strong>OS</strong> which contains the code of the operating system, and a <strong>File System</strong> which contains infromation regarding existing file sin the system, used storage space and free storage space.</p>
+<hr>
+<a for="toc-anchor" id="**presentation-to-user**"></a><h2 id="presentation-to-user-4" data-line="27" class="code-line"><strong>Presentation To User</strong></h2>
+<p data-line="29" class="code-line">A file system uses a hierarchical structure in which there is a root directory followed by subdirectories which can contain files and other directories.</p>
+<p data-line="31" class="code-line">Files can be stored on the web using:</p>
+<ul>
+<li data-line="33" class="code-line">NFS (Network File System) on Unix</li>
+<li data-line="34" class="code-line">SMB (Server Message Block) on Windows</li>
+<li data-line="35" class="code-line">CIFS (Common Internet File System)</li>
+<li data-line="36" class="code-line">Modern services such as OneDrive and DropBox</li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Client-server communication protocol scheme for a remote file</p>
+<p data-line="39" class="code-line">In order for a file to be stored remotely, the client has a reference to the actual sotred file on the server. The client can perform operations on the file which are then sent to the server.
+<p align="center">
+<img src="/img/client-server.png">
+<figcaption style="text-align:center;">Fig. 2: Client-server protocol.</figcaption>
+</p></p>
+</div>
+<hr>
+<a for="toc-anchor" id="**administration-of-assigned-space**"></a><h2 id="administration-of-assigned-space-4" data-line="47" class="code-line"><strong>Administration of Assigned Space</strong></h2>
+<p data-line="49" class="code-line">In the following section we will take a a look at how the OS manages the assigned space of files.</p>
+<a for="toc-anchor" id="**representation-of-a-file**"></a><h3 id="representation-of-a-file-4" data-line="51" class="code-line"><strong>Representation of a File</strong></h3>
+<p data-line="53" class="code-line">In addition to file content, a file system also stores metadata in a data structure called a <strong>descriptor</strong>. The metadata includes:</p>
+<ul>
+<li data-line="55" class="code-line">Owner</li>
+<li data-line="56" class="code-line">Access permissions</li>
+<li data-line="57" class="code-line">Creation date</li>
+<li data-line="58" class="code-line">Block list containing file info</li>
+</ul>
+<p data-line="60" class="code-line">When a process or user opens a file, the OS must find the corresponding file descriptor and put it in RAM.</p>
+<div class="admonition info">
+<p data-line="63" class="code-line">Operations on a file will have a faster response time if the file descriptor is in memory since that's where al the necessary information is stored to execute any operation on a file.</p>
+</div>
+<a for="toc-anchor" id="**block-size**"></a><h3 id="block-size-4" data-line="65" class="code-line"><strong>Block Size</strong></h3>
+<ol>
+<li data-line="67" class="code-line">Variable-sized blocks grouped in contigous sectors on the disc.</li>
+<li data-line="68" class="code-line">Fixed-sized blocks grouped in sectors that may not be contiguous.</li>
+</ol>
+<div class="admonition success">
+<p class="admonition-title">More flexible option for storing blocks</p>
+<p data-line="71" class="code-line">Keeping in mind that files can be big or small, and can often change in size, its better to store blocks using the second technique since it:</p>
+<ul>
+<li data-line="72" class="code-line">Won't leave fragments behind that are too small to store anything</li>
+<li data-line="73" class="code-line">Won't push a file into another zone of the disk</li>
+<li data-line="74" class="code-line">Will dynamically allocate blocks if a file grows, and de-allocate blocks if a file gets smaller</li>
+<li data-line="75" class="code-line">Reduces the number of operations needed to assign the space</li>
+</ul>
 </div>
 <div class="admonition danger">
-<p class="admonition-title">Danger</p>
+<p class="admonition-title">Be careful with block size</p>
+<ul>
+<li data-line="78" class="code-line">A block must have an adequate size since it can't be too big or else small files will not use up the space of the block.</li>
+<li data-line="79" class="code-line">A block must also not be too small or it will imply many reads to the disk, increasing response time and decreasing performance.</li>
+</ul>
+</div>
+<a for="toc-anchor" id="**registry-of-assigned-blocks**"></a><h3 id="registry-of-assigned-blocks-4" data-line="81" class="code-line"><strong>Registry of Assigned Blocks</strong></h3>
+<p data-line="83" class="code-line">How do we represent the allocated space of a file when its stored across many blocks?<br>
+(Solves problems encountered with contiguous allocation)</p>
+<div class="admonition tldr">
+<p class="admonition-title">Linked Allocation</p>
+<p data-line="87" class="code-line">We can use a linked list of disk blocks that can be scattered anywhere on the disk. The directory contains a pointer to the first and last blocks of the file (not visible to user) and each block contains a pointer to the next block.</p>
+<p align="center"> 
+    <img src="/img/linked.png"> 
+    <figcaption style="text-align:center;">Fig. 3: Linked allocation of disk space.</figcaption>
+</p>
+<div class="admonition failure">
+<p class="admonition-title">Disadvantages of linked allocation</p>
+<ul>
+<li data-line="95" class="code-line">It can only be used for sequential-access files since we must always start at the begining of the file and follow the pointers to get the <em>i</em>th block.</li>
+<li data-line="96" class="code-line">Each pointer requires a disk read and some requiere a disk seek, making it inefficient to support direct-access capabilities.</li>
+<li data-line="97" class="code-line">Pointers require a lot of storage space. Each pointer needs 4 bytes from a 512-byte block, so .78% of the disk is being used for pointers and not information.</li>
+</ul>
+</div>
 </div>
 <div class="admonition tldr">
-<p class="admonition-title">Tldr</p>
+<p class="admonition-title">Indexed Allocation</p>
+<p data-line="100" class="code-line">In this solution, each file has its own index block, which is an array of disk-block addresses. The directory contains the address of the index block. To find and read the <em>i</em>th block, we use the pointer in the <em>i</em>th index-block registry. This supported direct access without suffering grom external fragmentation, since any free block on the disk can satisfy a request for more space.</p>
+ <p align="center"> 
+    <img src="/img/indexed.png"> 
+    <figcaption style="text-align:center;">Fig. 4: Indexed allocation of disk space.</figcaption>
+</p>
+<div class="admonition failure">
+<p class="admonition-title">Disadvantages of indexed allocation</p>
+<ul>
+<li data-line="107" class="code-line">The pointer overhead of the index block is generally greater than the pointer overhead of linked allocation. For example, in the case that a file has only one two blocks,  with linked allocation we lose only the space of one pointer per block. However, with indexed allocation, an entire index-block must be allocated even if only one or two pointers will be non-null.</li>
+</ul>
 </div>
-<div class="admonition info">
-<p class="admonition-title">Info</p>
-</div>
-<div class="admonition tip">
-<p class="admonition-title">Tip</p>
-</div>
-<div class="admonition success">
-<p class="admonition-title">Success</p>
 </div>
 <div class="admonition question">
-<p class="admonition-title">Question</p>
+<p class="admonition-title">Activity 14a. The amount of free space in a disk can be measured by using a block list or a map of bits. Suppose a disk address requires D bits. For a disk containing B blocks, F of those blocks are free. Indicate under which condition the block list utilizes less space than the map of bits. If D has 16 bits, express your response as a percentage of space on the disk that must be free.</p>
+<p data-line="111" class="code-line">In a map of bits, we use one bit per block. In a list of free blocks, there is a node in the list for every free block. If we have F free blocks, then we will utilize 16F bits of space to represent the list of free blocks. The map of bits has B bits.
+If I want the list of blocks to be smaller, then I need 16F &lt; B. Since B is the amount of total blocks, we let that equal 100% of the blocks. So, our formula becomes 16F&lt;100%. Therefore, F must be &lt; 6.25%. This works well if there are not that many free blocks. Otherwise, this structure will consume too much space.</p>
 </div>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
+<div class="admonition question">
+<p class="admonition-title">Activity 14b. One way to use contiguous allocation of a disc and not suffer from fragmentation is to compact the disk every time a file is deleted.. Since all the files are stored in a contiguous set of blocks, to copy a file requires a seek and a rotational latency to read it, followed by the time it takes to transfer the data. To write a file requires the same amount of work. Suppose that t<sub>seek</sub> = 5 ms, t<sub>latency</sub>  =  4 ms, v<sub>transfer</sub> = 8 MB/s, and average file size =  KB. How long will it take to read a file from main  storage and then write it on a new location on the disk? How long will it take to compact a 16 GB hard disk?</p>
+<p data-line="115" class="code-line">To transfer an 8 KB file at a rate of 8MB/s, we can perform a simple conversion.</p>
+<p data-line="117" class="code-line">8 KB x (1 MB/ 1024 KB) x (1 s/ 8 MB) = .9766 ms (or 1 ms assuming base 10).<br>
+The amount of time it would take to read a file and write it to a new location is: t<sub>read</sub> + t<sub>write</sub>.<br>
+t<sub>read</sub> =  t<sub>seek</sub> + t<sub>latency</sub> + t<sub>transfer</sub> = 5 + 4 + .9766 = 9.9766 ms.<br>
+Since we assumed that t<sub>read</sub> = t<sub>write</sub>, the amount of time to read a file and write it to a new location would be 2t<sub>read</sub> = 19.9532 ms.</p>
+<p data-line="122" class="code-line">To send one file it takes 19.9532 ms. To compact a 16 GB drive, we can fit 2,097,152 files each of size 8 KB since,</p>
+<p data-line="124" class="code-line">(16 x 2<sup>30</sup> bits/1 GB) / (8 x 2<sup>10</sup> bits/1 MB) = 2,097,152 files.</p>
+<p data-line="126" class="code-line">To compact a file, we have to read one file and write is somewhere else. Since this takes 19.9532 ms and we have 2,097,152 files, the compacting process would take 418,448,932,864 ms or 11.623 hours.</p>
 </div>
-<div class="admonition failure">
-<p class="admonition-title">Failure</p>
-</div>
-<div class="admonition bug">
-<p class="admonition-title">Bug</p>
+<a for="toc-anchor" id="**optimization**"></a><h3 id="optimization-4" data-line="128" class="code-line"><strong>Optimization</strong></h3>
+<p data-line="130" class="code-line">In a traditional hard disk, the movement of the read/write head is dominated by the time it takes to find a sector and the time it takes to transfer data. So, if blocks are dispersed on many different tracks, we will have poor performance. In an optimal allocation of blocks for one file, we would see all the blocks aligned on the same track which would make the t<sub>seek</sub> negligible.</p>
+<div class="admonition example">
+<p class="admonition-title">Defragmentation</p>
+<p data-line="133" class="code-line">To reduce time due to dispersed data blocks, we can re-locate the content of the file in contiguous blocks or at least in block along the same track but this takes time and space since it requires to copying of each block of data to a new location.</p>
 </div>
 <div class="admonition example">
-<p class="admonition-title">Example</p>
+<p class="admonition-title">Shortest Seek Time First (SSTF)</p>
+<p data-line="136" class="code-line">In a First Come First Serve (FCFS) scheme, the first petition that arrives to the disk queue is the one that gets attended but this doesn't attempt to optimize the seek time.  Instead, one can first attend petitions that correspond to the blocks closest to the head. This is known as SSTF. However, this can cause starvation for a request if it has higher seek time than compared to incoming requests.</p>
 </div>
-<div class="admonition quote">
-<p class="admonition-title">Quote</p>
+<div class="admonition example">
+<p class="admonition-title">SCAN (Elevator algorithm)</p>
+<p data-line="139" class="code-line">In this disk scheduling algorithm, the disk arm moves into a particular direction and services the requests coming in its path and after reaching the end of disk, it reverses its direction and again services the request arriving in its path. However, this results in a long waiting time for requests in locations just visited by the disk arm.</p>
 </div>
+<a for="toc-anchor" id="**directory-representation**"></a><h3 id="directory-representation-4" data-line="141" class="code-line"><strong>Directory Representation</strong></h3>
+<p data-line="143" class="code-line">As we already know, a directory must store a list of its files and subdirectories. This list can be stored in tables or files but tables have a fixed size and the information of those directories is variable since they can store one or many files and subdirectories.</p>
+<p data-line="145" class="code-line">A directory stores information about its files and subdirectories through their descriptors.</p>
+<div class="admonition info">
+<p class="admonition-title">Directories can directly store the descriptors, or it can store pointers to those descriptors. The latter is more space efficient.</p>
+</div>
+<a for="toc-anchor" id="**free-space-management**"></a><h2 id="free-space-management-4" data-line="149" class="code-line"><strong>Free Space Management</strong></h2>
 </div>
 
 </body>
