@@ -32,7 +32,7 @@ ISIS 2203</p>
 <a for="toc-anchor" id="**introduction**"></a><h2 id="introduction-4" data-line="14" class="code-line"><strong>Introduction</strong></h2>
 <p data-line="16" class="code-line">Hard disks are organized in the following fashion.
 <p align="center">
-<img src="/img/disk.png">
+<img src="https://aortiz49.github.io/operating-systems-projects/img/disk.png">
 <figcaption style="text-align:center;">Fig. 1: Disk storage.</figcaption>
 </p></p>
 <p data-line="22" class="code-line">The <strong>Master Boot Record</strong> (MBR) is stored in track 0, in part of sector 0. The MBR stores information related to boot operations as well as a table specifying how the drive is partitioned.
@@ -51,7 +51,7 @@ Each one of these partitions contains a <strong>Boot Block</strong> which contai
 <p class="admonition-title">Client-server communication protocol scheme for a remote file</p>
 <p data-line="39" class="code-line">In order for a file to be stored remotely, the client has a reference to the actual sotred file on the server. The client can perform operations on the file which are then sent to the server.
 <p align="center">
-<img src="/img/client-server.png">
+<img src="https://aortiz49.github.io/operating-systems-projects/img/client-server.png">
 <figcaption style="text-align:center;">Fig. 2: Client-server protocol.</figcaption>
 </p></p>
 </div>
@@ -99,7 +99,7 @@ Each one of these partitions contains a <strong>Boot Block</strong> which contai
 <p class="admonition-title">Linked Allocation</p>
 <p data-line="87" class="code-line">We can use a linked list of disk blocks that can be scattered anywhere on the disk. The directory contains a pointer to the first and last blocks of the file (not visible to user) and each block contains a pointer to the next block.</p>
 <p align="center"> 
-    <img src="/img/linked.png"> 
+    <img src="https://aortiz49.github.io/operating-systems-projects/img/linked.png"> 
     <figcaption style="text-align:center;">Fig. 3: Linked allocation of disk space.</figcaption>
 </p>
 <div class="admonition failure">
@@ -115,7 +115,7 @@ Each one of these partitions contains a <strong>Boot Block</strong> which contai
 <p class="admonition-title">Indexed Allocation</p>
 <p data-line="100" class="code-line">In this solution, each file has its own index block, which is an array of disk-block addresses. The directory contains the address of the index block. To find and read the <em>i</em>th block, we use the pointer in the <em>i</em>th index-block registry. This supported direct access without suffering grom external fragmentation, since any free block on the disk can satisfy a request for more space.</p>
  <p align="center"> 
-    <img src="/img/indexed.png"> 
+    <img src="https://aortiz49.github.io/operating-systems-projects/img/indexed.png"> 
     <figcaption style="text-align:center;">Fig. 4: Indexed allocation of disk space.</figcaption>
 </p>
 <div class="admonition failure">
